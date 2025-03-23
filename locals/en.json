@@ -1,0 +1,11 @@
+{
+    "menu": {
+        "home": "Home",
+        "about": "About",
+        "systems": "Systems",
+        "login": "Login",
+        "logout": "Logout",
+        "account": "Account",
+        "lang": "ES"
+    }
+}

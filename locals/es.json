@@ -1,0 +1,11 @@
+{
+    "menu": {
+        "home": "Inicio",
+        "about": "Sobre",
+        "systems": "Sistemas",
+        "login": "Iniciar sesión",
+        "logout": "Cerrar sesión",
+        "account": "Cuenta",
+        "lang": "EN"
+    }
+}
