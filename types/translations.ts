@@ -2,10 +2,8 @@ export interface Translations {
     menu: {
         home: string;
         about: string;
-        systems: string;
         login: string;
         logout: string;
-        account: string;
         lang: string;
     },
     languages: {
@@ -20,5 +18,14 @@ export interface Translations {
         forgot: string;
         signup: string;
         login: string;
+    },
+    register: {
+        title: string;
+        email: string;
+        confirm_email: string;
+        email_placeholder: string;
+        password: string;
+        confirm_password: string;
+        register: string
     }
 }

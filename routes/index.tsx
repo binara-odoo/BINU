@@ -4,6 +4,8 @@ import VideoBlur from "../islands/VideoBlur.tsx";
 import { Translations } from "../types/translations.ts";
 import { Handlers, PageProps } from "https://deno.land/x/fresh@1.7.3/server.ts";
 import { LoadTranslations } from "../utils/i18n.ts";
+import PagesBackground from "../components/PagesBackground.tsx";
+import Carousel from "../components/Carousel.tsx";
 
 interface HomeProps {
   LoggedIn: boolean;
@@ -26,6 +28,7 @@ export const handler: Handlers<HomeProps> = {
 
 export default function Home( { data } : PageProps<HomeProps> ) {
   return (
+    <div>
     <Background>
       <div class="min-h-screen bg-black text-white">
         <Navbar LoggedIn = { data.LoggedIn } Translations = { data.Translations } lang = { data.lang }/>
@@ -34,5 +37,9 @@ export default function Home( { data } : PageProps<HomeProps> ) {
         </main>
     </div>
     </Background>
+      <PagesBackground>
+        <Carousel />
+      </PagesBackground>
+    </div>
   );
 }

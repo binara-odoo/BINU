@@ -28,7 +28,7 @@ export default function Login({ data }: PageProps<LoginProps>) {
   return (
     <div class="relative min-h-screen">
       <PagesBackground>
-        <div class="relative z-10 min-h-screen bg-black/40 text-white">
+        <div class="relative z-10 min-h-screen bg-black/50 text-white">
           <Navbar
             LoggedIn={data.LoggedIn}
             Translations={data.Translations}

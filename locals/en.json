@@ -21,6 +21,15 @@
         "signup": "Create an account",
         "login": "Login"
     },
+    "register": {
+        "title": "Create an account",
+        "email": "Email",
+        "confirm_email": "Confirm email",
+        "email_placeholder": "name@company.com",
+        "password": "Password",
+        "confirm_password": "Confirm password",
+        "register": "Create an account"
+    },
     "about": {
         "general_vision": "BINU is a system designed to transform the way companies manage their processes. It integrates technological innovation with a user-centric approach to offer strategic consulting, personalized training, and custom system development. BINU is not just a tool, but an integrated solution that boosts productivity and business efficiency."
     }

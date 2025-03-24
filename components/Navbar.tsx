@@ -15,8 +15,6 @@ export default function Navbar({ LoggedIn, Translations, lang }: NavProps) {
   ];
 
   const loggedInMenu = [
-    { name: Translations.menu.systems, href: "#" },
-    { name: Translations.menu.account, href: "#" },
     { name: Translations.menu.logout, href: "#" },
   ];
 
