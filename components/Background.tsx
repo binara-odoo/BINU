@@ -1,5 +1,8 @@
-// components/Background.tsx
-export default function Background() {
+interface BackgroundProps {
+  children: preact.ComponentChildren;
+}
+
+export default function Background({ children }: BackgroundProps) {
     return (
       <div
         id="video-container"
@@ -28,6 +31,8 @@ export default function Background() {
         >
           <source src="/background-mobile.mp4" type="video/mp4" />
         </video>
+        { /* Render children on top of the background */}
+        { children }
       </div>
     );
   }

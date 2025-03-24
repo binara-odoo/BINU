@@ -6,6 +6,22 @@
         "login": "Login",
         "logout": "Logout",
         "account": "Account",
-        "lang": "ES"
+        "lang": "Language"
+    },
+    "languages": {
+        "es": "Spanish",
+        "en": "English"
+    },
+    "login": {
+        "title": "Login",
+        "email": "Email",
+        "email_placeholder": "name@company.com",
+        "password": "Password",
+        "forgot": "Forgot your password?",
+        "signup": "Create an account",
+        "login": "Login"
+    },
+    "about": {
+        "general_vision": "BINU is a system designed to transform the way companies manage their processes. It integrates technological innovation with a user-centric approach to offer strategic consulting, personalized training, and custom system development. BINU is not just a tool, but an integrated solution that boosts productivity and business efficiency."
     }
 }

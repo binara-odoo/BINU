@@ -26,12 +26,13 @@ export const handler: Handlers<HomeProps> = {
 
 export default function Home( { data } : PageProps<HomeProps> ) {
   return (
-    <div class="min-h-screen bg-black text-white">
-      <Navbar LoggedIn = { data.LoggedIn } Translations = { data.Translations } lang = { data.lang }/>
-      <main class="container mx-auto pt-24">
-        <Background />
-        <VideoBlur />
-      </main>
+    <Background>
+      <div class="min-h-screen bg-black text-white">
+        <Navbar LoggedIn = { data.LoggedIn } Translations = { data.Translations } lang = { data.lang }/>
+        <main class="container mx-auto pt-24">
+          <VideoBlur />
+        </main>
     </div>
+    </Background>
   );
 }

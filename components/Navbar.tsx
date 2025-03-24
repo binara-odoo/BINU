@@ -1,4 +1,5 @@
 import { Translations } from "../types/translations.ts";
+import LanguageDropdown from "../islands/LanguageDropdown.tsx";
 
 interface NavProps {
   LoggedIn: boolean;
@@ -6,27 +7,22 @@ interface NavProps {
   lang: string;
 }
 
-export default function Navbar( { LoggedIn, Translations, lang }: NavProps ) {
-
-  // Toggle language if current language is 'es', switch to 'en' and vice versa
-  const switchLanguage = lang === "es" ? "en" : "es";
-
+export default function Navbar({ LoggedIn, Translations, lang }: NavProps) {
 
   const menu = [
-    { name: Translations.menu.home, href: "/" },
+    { name: Translations.menu.home, href: `/?lang=${lang}` },
     { name: Translations.menu.about, href: "#" },
-    { name: Translations.menu.lang, href: `?lang=${switchLanguage}`}
-  ]
+  ];
 
   const loggedInMenu = [
     { name: Translations.menu.systems, href: "#" },
     { name: Translations.menu.account, href: "#" },
     { name: Translations.menu.logout, href: "#" },
-  ]
+  ];
 
   const nonLoggedInMenu = [
-    { name: Translations.menu.login, href: "#"},
-  ]
+    { name: Translations.menu.login, href: `/login?lang=${lang}` },
+  ];
 
   return (
     <nav class="w-full px-6 py-4 fixed top-0 left-0 z-50 bg-black/80 backdrop-blur-sm">
@@ -44,29 +40,45 @@ export default function Navbar( { LoggedIn, Translations, lang }: NavProps ) {
         </div>
         <div class="space-x-8">
           {/* Regular menu itmes */}
-          {
-            menu.map(( item ) => (
-              <a href = { item.href} class = "text-sm hover:opacity-75 transition-opacity">
-                { item.name }
-              </a>
-            ))
-          }
-          { /* Conditional menu items base on login status */}
-          {
-            LoggedIn ? (
-              loggedInMenu.map(( item ) => (
-                <a href= { item.href } class = "text-sm hover:opacity-75 transition-opacity">
-                  { item.name }
-                </a>
-              ))
-            ) : (
-              nonLoggedInMenu.map(( item ) => (
-                <a href = { item.href } class = "text-sm hover:opacity-75 transition-opacity">
-                  { item.name }
+          {menu.map((item) => (
+            <a
+              href={item.href}
+              class="text-sm hover:opacity-75 transition-opacity"
+            >
+              {item.name}
+            </a>
+          ))}
+          {/* Conditional menu items base on login status */}
+          {LoggedIn
+            ? (
+              loggedInMenu.map((item) => (
+                <a
+                  href={item.href}
+                  class="text-sm hover:opacity-75 transition-opacity"
+                >
+                  {item.name}
                 </a>
               ))
             )
-          }
+            : (
+              nonLoggedInMenu.map((item) => (
+                <a
+                  href={item.href}
+                  class="text-sm hover:opacity-75 transition-opacity"
+                >
+                  {item.name}
+                </a>
+              ))
+            )}
+          {/* Language dropdown using Translations */}
+          <LanguageDropdown 
+            languages={[
+              { code: "es", name: Translations.languages.es },
+              { code: "en", name: Translations.languages.en },
+            ]}
+            currentLang={lang}
+            menuText={Translations.menu.lang}
+          />
         </div>
       </div>
     </nav>

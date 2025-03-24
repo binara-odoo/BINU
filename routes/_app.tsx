@@ -10,7 +10,7 @@ export default function App({ Component }: PageProps) {
         <link rel="icon" type="image/png" href="/binu-icon.png" />
         <link rel="icon" type="image/png" href="/binu-icon.png" />
       </head>
-      <body>
+      <body style={{ backgroundColor: "#000000" }}>
         <Component />
       </body>
     </html>
