@@ -27,5 +27,16 @@ export interface Translations {
         password: string;
         confirm_password: string;
         register: string
+    },
+    about: {
+        general_vision: string;
+    },
+    binu_characteristics: {
+        strategic_consulting: string;
+        strategic_consulting_description: string;
+        custom_training: string;
+        custom_training_description: string;
+        custom_development: string;
+        custom_development_description: string;
     }
 }

@@ -1,13 +1,39 @@
-export default function Carousel() {
+import { Translations } from "../types/translations.ts";
+
+interface CarouselProps {
+    Translations: Translations;
+}
+
+
+
+export default function Carousel({ Translations }: CarouselProps) {
     return (
       <div class="void absolute inset-0 z-20 max-w-[1024px] mx-auto aspect-square">
         <div class="crop">
           <ul id="card-list" style="--count: 6;">
             <li>
-              <div class="card">
+              <div class="card  bg-gray-800/80 backdrop-blur-sm rounded-lg shadow">
                 <a href="">
-                  <span class="model-name">Gretel-ACTGAN</span>
-                  <span>Model for generating highly dimensional, mostly numeric, tabular data</span>
+                  <span class="model-name">{ Translations.binu_characteristics.custom_training }</span>
+                  <span>{ Translations.binu_characteristics.custom_training_description }</span>
+                </a>
+              </div>
+            </li>
+
+            <li>
+              <div class="card  bg-gray-800/80 backdrop-blur-sm rounded-lg shadow">
+                <a href="">
+                  <span class="model-name">{ Translations.binu_characteristics.custom_development }</span>
+                  <span>{ Translations.binu_characteristics.custom_development_description}</span>
+                </a>
+              </div>
+            </li>
+
+            <li>
+              <div class="card  bg-gray-800/80 backdrop-blur-sm rounded-lg shadow">
+                <a href="">
+                  <span class="model-name">{ Translations.binu_characteristics.custom_training }</span>
+                  <span>{ Translations.binu_characteristics.custom_training_description }</span>
                 </a>
               </div>
             </li>

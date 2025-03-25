@@ -38,7 +38,7 @@ export default function Home( { data } : PageProps<HomeProps> ) {
     </div>
     </Background>
       <PagesBackground>
-        <Carousel />
+        <Carousel Translations = { data.Translations } />
       </PagesBackground>
     </div>
   );

@@ -45,7 +45,6 @@ li {
 	align-items: flex-start;
 	padding: 16px 24px;
 	gap: 8px;
-	background: #FFFFFF;
 	box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1), 0px 16px 32px rgba(0, 0, 0, 0.1);
 	border-radius: 12px;
 	font-family: 'Inter', sans-serif;
@@ -53,7 +52,7 @@ li {
 	font-weight: 400;
 	font-size: 14px;
 	line-height: 20px;
-	color: #535062;
+	color: #fff;
 	animation: rotateCCW calc(var(--rotate-speed) * 1s) var(--easing) infinite;
 }
 a {
@@ -64,7 +63,7 @@ a {
 	font-weight: 500;
 	font-size: 18px;
 	line-height: 150%;
-	color: #3B2ED0;
+	color: #B6E2FF;
 	display: block;
 }
 svg {
