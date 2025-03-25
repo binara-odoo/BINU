@@ -14,8 +14,8 @@ export default function Carousel({ Translations }: CarouselProps) {
             <li>
               <div class="card  bg-gray-800/80 backdrop-blur-sm rounded-lg shadow">
                 <a href="">
-                  <span class="model-name">{ Translations.binu_characteristics.custom_training }</span>
-                  <span>{ Translations.binu_characteristics.custom_training_description }</span>
+                  <span class="model-name">{ Translations.binu_characteristics.strategic_consulting }</span>
+                  <span>{ Translations.binu_characteristics.strategic_consulting_description }</span>
                 </a>
               </div>
             </li>
