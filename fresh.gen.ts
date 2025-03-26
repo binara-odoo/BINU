@@ -9,6 +9,7 @@ import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $login from "./routes/login.tsx";
 import * as $signin from "./routes/signin.tsx";
+import * as $Carousel2 from "./islands/Carousel2.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $LanguageDropdown from "./islands/LanguageDropdown.tsx";
 import * as $VideoBlur from "./islands/VideoBlur.tsx";
@@ -25,6 +26,7 @@ const manifest = {
     "./routes/signin.tsx": $signin,
   },
   islands: {
+    "./islands/Carousel2.tsx": $Carousel2,
     "./islands/Counter.tsx": $Counter,
     "./islands/LanguageDropdown.tsx": $LanguageDropdown,
     "./islands/VideoBlur.tsx": $VideoBlur,

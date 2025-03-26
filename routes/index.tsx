@@ -6,7 +6,7 @@ import { Handlers, PageProps } from "https://deno.land/x/fresh@1.7.3/server.ts";
 import { LoadTranslations } from "../utils/i18n.ts";
 import PagesBackground from "../components/PagesBackground.tsx";
 import Carousel from "../components/Carousel.tsx";
-
+import Carousel2 from "../islands/Carousel2.tsx";
 interface HomeProps {
   LoggedIn: boolean;
   Translations: Translations;
@@ -21,14 +21,16 @@ export const handler: Handlers<HomeProps> = {
     return ctx.render({
       LoggedIn: false, // Actualiza si tienes autenticación
       Translations: translations,
-      lang: lang
+      lang: lang,
     });
   },
 };
 
-export default function Home( { data } : PageProps<HomeProps> ) {
+export default function Home({ data }: PageProps<HomeProps>) {
   return (
     <div>
+      {
+        /*
     <Background>
       <div class="min-h-screen bg-black text-white">
         <Navbar LoggedIn = { data.LoggedIn } Translations = { data.Translations } lang = { data.lang }/>
@@ -36,9 +38,28 @@ export default function Home( { data } : PageProps<HomeProps> ) {
           <VideoBlur />
         </main>
     </div>
-    </Background>
+    </Background>*/
+      }
       <PagesBackground>
-        <Carousel Translations = { data.Translations } />
+        <div class="min-h-screen text-white">
+          <Navbar
+            LoggedIn={data.LoggedIn}
+            Translations={data.Translations}
+            lang={data.lang}
+          />
+          <main>
+            {/* Full height hero section to showcase background */}
+            <div class="h-screen flex items-center justify-center">
+
+            </div>
+
+            {/* Content section */}
+            <div class="container mx-auto">
+              <Carousel2 Translations={data.Translations} />
+              <VideoBlur />
+            </div>
+          </main>
+        </div>
       </PagesBackground>
     </div>
   );

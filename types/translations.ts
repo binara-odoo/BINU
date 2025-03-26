@@ -28,8 +28,9 @@ export interface Translations {
         confirm_password: string;
         register: string
     },
-    about: {
-        general_vision: string;
+    engagement_word: {
+        title: string;
+        characteristics: string;
     },
     binu_characteristics: {
         strategic_consulting: string;

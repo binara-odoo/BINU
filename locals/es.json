@@ -28,8 +28,9 @@
         "confirm_password": "Confirmar contraseña",
         "register": "Crear una cuenta"
     },
-    "about": {
-        "general_vision": "BINU es un sistema diseñado para transformar la forma en que las empresas gestionan sus procesos. Integra innovación tecnológica con un enfoque centrado en el usuario para ofrecer consultoría estratégica, capacitación personalizada y desarrollo de sistemas a medida. BINU no es solo una herramienta, sino una solución integral que potencia la productividad y eficiencia empresarial."
+    "engagement_word": {
+        "title": "BINU: Innovación que impulsa tu negocio al siguiente nivel.",
+        "characteristics": "Conoce nuestras características"
     },
     "binu_characteristics": {
         "strategic_consulting": "Consultoría estratégica",

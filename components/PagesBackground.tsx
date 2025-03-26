@@ -1,23 +1,22 @@
-interface BackgroundProps {
-    children: preact.ComponentChildren;
-  }
-  
-  export default function PagesBackground({ children }: BackgroundProps) {
-      return (
-        <div
-          id="video-container"
-          class="relative w-full h-screen overflow-hidden"
-        >
-          {/* Video para escritorio */}
-          <video
+interface PagesBackgroundProps {
+  children: preact.ComponentChildren;
+}
+
+export default function PagesBackground({ children }: PagesBackgroundProps) {
+  return (
+    <div class="relative min-h-screen w-full">
+      {/* Background Video Container */}
+      <div class="fixed top-0 left-0 w-full h-full -z-10">
+        {/* Video para escritorio */}
+        <video
             id="video-bg"
             autoPlay
             loop
             muted
             playsInline
-            class="absolute top-0 left-0 w-full h-full object-cover hidden md:block transition-[filter] duration-500 ease-out blur-md"
+            class="absolute top-0 left-0 w-full h-full object-cover hidden md:block transition-[filter] duration-500 ease-out"
           >
-            <source src="/PageBackground.mp4" type="video/mp4" />
+            <source src="/background.mp4" type="video/mp4" />
           </video>
     
           {/* Video para móvil */}
@@ -27,13 +26,17 @@ interface BackgroundProps {
             loop
             muted
             playsInline
-            class="absolute top-0 left-0 w-full h-full object-cover block md:hidden transition-[filter] duration-500 ease-out blur-md"
+            class="absolute top-0 left-0 w-full h-full object-cover block md:hidden transition-[filter] duration-500 ease-out"
           >
-            <source src="/MobilePageBackground.mp4" type="video/mp4" />
+            <source src="/background-mobile.mp4" type="video/mp4" />
           </video>
-          { /* Render children on top of the background */}
-          { children }
-        </div>
-      );
-    }
+      </div>
+
+      {/* Content Container */}
+      <div class="relative z-10 min-h-screen">
+        {children}
+      </div>
+    </div>
+  );
+}
     
