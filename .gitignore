@@ -9,3 +9,4 @@
 _fres
 # npm dependencies
 node_modules/
+.env
