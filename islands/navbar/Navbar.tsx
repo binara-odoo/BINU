@@ -29,6 +29,10 @@ export default function Navbar({ LoggedIn, Translations, lang, userInfo }: NavPr
 
   const menu = LoggedIn ? loggedInMenu : nonLoggedInMenu;
 
+  console.log("userInfo:", userInfo);
+console.log("userInfo.picture:", userInfo?.picture);
+
+
   return (
     <>
       <nav class="w-full px-6 py-4 fixed top-0 left-0 z-50 bg-black/80 backdrop-blur-sm">
