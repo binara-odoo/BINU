@@ -1,0 +1,112 @@
+.dashboard-container {
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    margin: 60px auto;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24px;
+    padding: 20px;
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 1;
+    background-color: rgba(16, 13, 20, 0.741);
+    border-radius: 10px;
+    position: relative;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(180, 227, 255, 0.3);
+}
+
+.dashboard-card-title {
+    color: #B4E3FF;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.dashboard-card-bar {
+    position: relative;
+    height: 2px;
+    width: 100%;
+    background-color: #B4E3FF;
+    margin: 0 0 20px 0;
+}
+
+.dashboard-card-icon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-card-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    transform: translateX(-50%);
+    background: #B4E3FF;
+    border-radius: 10px;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 10px #B4E3FF, 0 0 20px #B4E3FF;
+}
+
+.dashboard-card:hover::before {
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    top: -2px;
+    left: -2px;
+    transform: none;
+    background: transparent;
+    border: 2px solid #B4E3FF;
+    box-shadow: 0 0 10px #B4E3FF, 0 0 20px #B4E3FF;
+}
+
+@media (max-width: 1200px) {
+    .dashboard-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .dashboard-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .dashboard-card-title {
+        font-size: 0.8rem;
+    }
+}

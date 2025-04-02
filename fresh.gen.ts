@@ -4,32 +4,62 @@
 
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
+import * as $account_logout from "./routes/account/logout.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $auth_callback from "./routes/auth/callback.ts";
+import * as $auth_index from "./routes/auth/index.tsx";
+import * as $dashboard from "./routes/dashboard.tsx";
+import * as $dashboard_dashboard from "./routes/dashboard/dashboard.tsx";
+import * as $dashboard_dashboard2 from "./routes/dashboard/dashboard2.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
-import * as $login from "./routes/login.tsx";
-import * as $signin from "./routes/signin.tsx";
+import * as $specs_add_feature from "./routes/specs/add-feature.tsx";
+import * as $specs_fix from "./routes/specs/fix.tsx";
+import * as $specs_new_system from "./routes/specs/new-system.tsx";
+import * as $specs_select_system from "./routes/specs/select-system.tsx";
+import * as $specs_specs from "./routes/specs/specs.tsx";
+import * as $specs_system_options from "./routes/specs/system-options.tsx";
 import * as $Carousel2 from "./islands/Carousel2.tsx";
 import * as $Counter from "./islands/Counter.tsx";
-import * as $LanguageDropdown from "./islands/LanguageDropdown.tsx";
-import * as $VideoBlur from "./islands/VideoBlur.tsx";
+import * as $main_ApproachCarousel from "./islands/main/ApproachCarousel.tsx";
+import * as $main_FeaturesCarousel from "./islands/main/FeaturesCarousel.tsx";
+import * as $main_VideoBlur from "./islands/main/VideoBlur.tsx";
+import * as $navbar_LanguageDropdown from "./islands/navbar/LanguageDropdown.tsx";
+import * as $navbar_Navbar from "./islands/navbar/Navbar.tsx";
+import * as $navbar_ProfileDropdown from "./islands/navbar/ProfileDropdown.tsx";
+import * as $navbar_Sidebar from "./islands/navbar/Sidebar.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
+    "./routes/account/logout.tsx": $account_logout,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/auth/callback.ts": $auth_callback,
+    "./routes/auth/index.tsx": $auth_index,
+    "./routes/dashboard.tsx": $dashboard,
+    "./routes/dashboard/dashboard.tsx": $dashboard_dashboard,
+    "./routes/dashboard/dashboard2.tsx": $dashboard_dashboard2,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
-    "./routes/login.tsx": $login,
-    "./routes/signin.tsx": $signin,
+    "./routes/specs/add-feature.tsx": $specs_add_feature,
+    "./routes/specs/fix.tsx": $specs_fix,
+    "./routes/specs/new-system.tsx": $specs_new_system,
+    "./routes/specs/select-system.tsx": $specs_select_system,
+    "./routes/specs/specs.tsx": $specs_specs,
+    "./routes/specs/system-options.tsx": $specs_system_options,
   },
   islands: {
     "./islands/Carousel2.tsx": $Carousel2,
     "./islands/Counter.tsx": $Counter,
-    "./islands/LanguageDropdown.tsx": $LanguageDropdown,
-    "./islands/VideoBlur.tsx": $VideoBlur,
+    "./islands/main/ApproachCarousel.tsx": $main_ApproachCarousel,
+    "./islands/main/FeaturesCarousel.tsx": $main_FeaturesCarousel,
+    "./islands/main/VideoBlur.tsx": $main_VideoBlur,
+    "./islands/navbar/LanguageDropdown.tsx": $navbar_LanguageDropdown,
+    "./islands/navbar/Navbar.tsx": $navbar_Navbar,
+    "./islands/navbar/ProfileDropdown.tsx": $navbar_ProfileDropdown,
+    "./islands/navbar/Sidebar.tsx": $navbar_Sidebar,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

@@ -8,10 +8,13 @@ export default function Carousel2({ Translations }: Carousel2Props) {
   const selectedItem = useSignal("1");
 
   return (
-    <div class="relative my-20 z-10 mb-48">
-      <h1 class="text-center neon-text text-4xl font-bold mb-10 relative z-20">
+    <div class="relative z-10 p-10 bg-black/70">
+      <h1 class="text-center neon-text text-4xl font-bold relative z-20 mb-10">
         {Translations.engagement_word.title}
       </h1>
+      <h2 class="text-center neon-text text-2xl font-bold relative z-20 mb-10">
+        { Translations.binu_characteristics.subtitle }
+      </h2>
       <div class="carousel-container">
         <input
           type="radio"
@@ -37,13 +40,13 @@ export default function Carousel2({ Translations }: Carousel2Props) {
 
         <div class="cards">
           <label class="card" for="item-1" id="song-1">
-            <img src="/custom_development.png" alt="Custom Development" />
+            <img src = "/strategic_consulting2.png" alt = { Translations.binu_characteristics.strategic_consulting } />
           </label>
           <label class="card" for="item-2" id="song-2">
-            <img src="/custom_training.png" alt="Custom Training" />
+            <img src="/custom_training.png" alt = { Translations.binu_characteristics.custom_training} />
           </label>
           <label class="card" for="item-3" id="song-3">
-            <img src="/strategic_consulting2.png" alt="Strategic Consulting" />
+            <img src = "custom_development.png" alt = { Translations.binu_characteristics.custom_development }/>
           </label>
         </div>
 
@@ -66,24 +69,21 @@ export default function Carousel2({ Translations }: Carousel2Props) {
             </div>
             <div class="info-area">
               <label class="song-info">
-                <div class="title">{Translations.binu_characteristics.custom_development}</div>
+                <div class="title">{ Translations.binu_characteristics.strategic_consulting }</div>
                 <div class="sub-line">
-                  <div class="subtitle">Binu Services</div>
-                  <div class="time">01</div>
+                  <div class="subtitle">{ Translations.binu_characteristics.strategic_consulting_description }</div>
                 </div>
               </label>
               <label class="song-info">
-                <div class="title">{Translations.binu_characteristics.custom_training}</div>
+                <div class="title">{ Translations.binu_characteristics.custom_training }</div>
                 <div class="sub-line">
-                  <div class="subtitle">Binu Services</div>
-                  <div class="time">02</div>
+                  <div class="subtitle">{ Translations.binu_characteristics.custom_training_description }</div>
                 </div>
               </label>
               <label class="song-info">
-                <div class="title">{Translations.binu_characteristics.strategic_consulting}</div>
+                <div class="title">{ Translations.binu_characteristics.strategic_consulting }</div>
                 <div class="sub-line">
-                  <div class="subtitle">Binu Services</div>
-                  <div class="time">03</div>
+                  <div class="subtitle">{ Translations.binu_characteristics.custom_development_description }</div>
                 </div>
               </label>
             </div>

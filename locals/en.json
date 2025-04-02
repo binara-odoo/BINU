@@ -1,12 +1,14 @@
 {
     "menu": {
         "home": "Home",
-        "about": "About",
-        "systems": "Systems",
         "login": "Login",
         "logout": "Logout",
-        "account": "Account",
-        "lang": "Language"
+        "lang": "Language",
+        "signin": "Sign In",
+        "loginWithGoogle": "Sign in with Google",
+        "registerManually": "Register Manually",
+        "backToLogin": "Back to Login",
+        "noAccount": "Don't have an account?"
     },
     "languages": {
         "es": "Spanish",
@@ -19,27 +21,75 @@
         "password": "Password",
         "forgot": "Forgot your password?",
         "signup": "Create an account",
-        "login": "Login"
-    },
-    "register": {
-        "title": "Create an account",
-        "email": "Email",
-        "confirm_email": "Confirm email",
-        "email_placeholder": "name@company.com",
-        "password": "Password",
-        "confirm_password": "Confirm password",
-        "register": "Create an account"
+        "login": "Login",
+        "login_google": "Login with Google"
     },
     "engagement_word": {
         "title": "BINU: Innovation that drives your business to the next level.",
         "characteristics": "Discover our features"
     },
     "binu_characteristics": {
+        "subtitle": "Discover our features",
         "strategic_consulting": "Strategic consulting",
         "strategic_consulting_description": "BINU offers strategic consulting to help companies make informed decisions and optimize their processes.",
         "custom_training": "Custom training",
         "custom_training_description": "Offers interactive guides and continuous support to ensure users make the most of the system",
         "custom_development": "Custom development",
         "custom_development_description": "Binu allows customizing functionalities and workflow according to each company's needs"
+    },
+    "approach": {
+        "title": "Our approach",
+        "in_depth_analysis": "In-depth analysis",
+        "in_depth_analysis_description": "We understand each client's unique needs to configure BINU in the best possible way according to their processes",
+        "efficient_implementation": "Efficient implementation",
+        "efficient_implementation_description": "We customize and integrate BINU into existing systems, ensuring a smooth transaction",
+        "continuing_training": "Continuing training",
+        "continuing_training_description": "We equip users with the tools needed to maximize the value of the system",
+        "support_and_evolution": "Support and evolution",
+        "support_and_evolution_description": "We keep BINU constantly updated to ensure it always meets the highest standards"
+    },
+    "dashboard":{
+        "home": "Home",
+        "calendar": "Calendar",
+        "information": "Information",
+        "contacts": "Contacts",
+        "sales": "Sales",
+        "documents": "Documents",
+        "projects": "Projects",
+        "evaluations": "Evaluations",
+        "specs": "Specs"
+    },
+    "specs_menu":{
+        "title": "System requirements",
+        "systems": "Systems",
+        "new_system": "New system",
+        "existing_system": "Existing system"
+    },
+    "new_system":{
+        "title": "New system",
+        "new_system_name": "System name",
+        "purpose": "What is the main purpose of the system?",
+        "users": "Who are the main users of the system?",
+        "timeline": "What is the estimated delivery time?",
+        "budget": "What is the estimated budget?",
+        "features": "What are the main features needed?",
+        "date": "What is the delivery date?",
+        "responsible": "Who is the responsible?",
+        "button": "Create requirement"
+    },
+    "existing_system":{
+        "title": "Select existing system",
+        "options": "Options for ",
+        "fix": "Fix",
+        "add": "Add"
+    },
+    "fix_system":{
+        "title": "Correction for ",
+        "feature": "What feature is not working?",
+        "expected": "What is the expected behavior?",
+        "current": "What is the current behavior?",
+        "steps": "Steps to reproduce the problem:",
+        "context": "Additional context or screenshots:",
+        "button": "Send requirement"
     }
 }

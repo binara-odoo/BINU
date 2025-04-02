@@ -3,8 +3,12 @@
         "home": "Inicio",
         "login": "Iniciar sesión",
         "logout": "Cerrar sesión",
-        "account": "Cuenta",
-        "lang": "Idioma"
+        "lang": "Idioma",
+        "signin": "Regístrate",
+        "loginWithGoogle": "Registrarse con Google",
+        "registerManually": "Registrarse manualmente",
+        "backToLogin": "Regresar al inicio de sesión",
+        "noAccount": "¿No tienes una cuenta?"
     },
     "languages": {
         "es": "Español",
@@ -17,27 +21,84 @@
         "password": "Contraseña",
         "forgot": "¿Olvidaste tu contraseña?",
         "signup": "Crear una cuenta",
-        "login": "Iniciar sesión"
-    },
-    "register": {
-        "title": "Crear una cuenta",
-        "email": "Correo electrónico",
-        "confirm_email": "Confirmar correo electrónico",
-        "email_placeholder": "nombre@empresa.com",
-        "password": "Contraseña",
-        "confirm_password": "Confirmar contraseña",
-        "register": "Crear una cuenta"
+        "login": "Iniciar sesión",
+        "login_google": "Iniciar sesión con Google"
     },
     "engagement_word": {
         "title": "BINU: Innovación que impulsa tu negocio al siguiente nivel.",
         "characteristics": "Conoce nuestras características"
     },
     "binu_characteristics": {
+        "subtitle": "Descubre nuestras características",
         "strategic_consulting": "Consultoría estratégica",
         "strategic_consulting_description": "BINU ofrece consultoría estratégica para ayudar a las empresas a tomar decisiones informadas y optimizar sus procesos.",
         "custom_training": "Capacitación personalizada",
         "custom_training_description": "Ofrece guías interactivas y soporte continuo para garantizar que los usuarios aprovechen al máximo el sistema",
         "custom_development": "Desarrollo de sistemas a medida",
         "custom_development_description" : "Binu permite personalizar funcionalidades y flujo de trabajo según las necesidades de cada empresa"
+    },
+    "approach": {
+        "title": "Nuestro enfoque",
+        "in_depth_analysis": "Análisis profundo",
+        "in_depth_analysis_description": "Entendemos las necesidades unicas de cada cliente para configurar BINU de la mejor manera posible acorde a sus procesos",
+        "efficient_implementation": "Implementación eficiente",
+        "efficient_implementation_description": "Personalizamos e integramos BINU en los sistemas existentes, garantizando una transacción fluida",
+        "continuing_training": "Capacitación continua",
+        "continuing_training_description": "Equipamos a los usuarios con las herramientas necesarias para maximizar el valor del sistema",
+        "support_and_evolution": "Soporte y evolución",
+        "support_and_evolution_description": "Mantenemos BINU en constante actualización para que siempre cumpla con los estándares más altos"
+    },
+    "dashboard":{
+        "home": "Inicio",
+        "calendar": "Calendario",
+        "information": "Información",
+        "contacts": "Contactos",
+        "sales": "Ventas",
+        "documents": "Documentos",
+        "projects": "Proyectos",
+        "evaluations": "Evaluaciones",
+        "specs": "Especificaciones"
+    },
+    "specs_menu":{
+        "title": "Sistema de requerimientos",
+        "systems": "Sistemas",
+        "new_system": "Nuevo sistema",
+        "existing_system": "Sistema existente"
+    },
+    "new_system":{
+        "title": "Nuevo sistema",
+        "new_system_name": "Nombre del sistema",
+        "purpose" : "¿Cuál es el propósito principal del sistema?",
+        "users": "¿Quiénes son los usuarios principales?",
+        "timeline": "¿Cuál es el tiempo estimado de entrega?",
+        "budget": "¿Cuál es el presupuesto estimado?",
+        "features": "¿Cuáles son las características principales necesarias?",
+        "date": "¿Cuál es la fecha de entrega?",
+        "responsible": "¿Quién es el responsable?",
+        "button": "Crear requerimiento"
+    },
+    "existing_system":{
+        "title": "Seleccionar sistema existente",
+        "options": "Opciones para ",
+        "fix": "Corregir",
+        "add": "Agregar"
+    },
+    "fix_system":{
+        "title": "Corrección para ",
+        "feature": "¿Qué característica no está funcionando?",
+        "expected": "¿Cuál es el comportamiento esperado?",
+        "current": "¿Cuál es el comportamiento actual?",
+        "steps": "Pasos para reproducir el problema:",
+        "context": "Contexto adicional o capturas de pantalla:",
+        "button": "Enviar requerimiento"
+    },
+    "add_feature": {
+        "title": "Nueva funcionalidad para ",
+        "feature": "¿Qué nueva funcionalidad necesita?",
+        "why": "¿Por qué se necesita esta funcionalidad?",
+        "users": "¿Quiénes usarán esta funcionalidad?",
+        "requirements": "¿Cuáles son los requisitos específicos?",
+        "integration": "¿Cómo se integrará con el sistema actual?",
+        "button": "Enviar requerimiento"
     }
 }

@@ -1,12 +1,12 @@
-import Navbar from "../components/Navbar.tsx";
-import Background from "../components/Background.tsx";
-import VideoBlur from "../islands/VideoBlur.tsx";
+import Navbar from "../islands/navbar/Navbar.tsx";
+import Background from "../components/background/Background.tsx";
+import VideoBlur from "../islands/main/VideoBlur.tsx";
 import { Translations } from "../types/translations.ts";
 import { Handlers, PageProps } from "https://deno.land/x/fresh@1.7.3/server.ts";
 import { LoadTranslations } from "../utils/i18n.ts";
-import PagesBackground from "../components/PagesBackground.tsx";
-import Carousel from "../components/Carousel.tsx";
-import Carousel2 from "../islands/Carousel2.tsx";
+import ApproachCarousel from "../islands/main/ApproachCarousel.tsx";
+import FeaturesCarousel from "../islands/main/FeaturesCarousel.tsx";
+
 interface HomeProps {
   LoggedIn: boolean;
   Translations: Translations;
@@ -28,19 +28,7 @@ export const handler: Handlers<HomeProps> = {
 
 export default function Home({ data }: PageProps<HomeProps>) {
   return (
-    <div>
-      {
-        /*
-    <Background>
-      <div class="min-h-screen bg-black text-white">
-        <Navbar LoggedIn = { data.LoggedIn } Translations = { data.Translations } lang = { data.lang }/>
-        <main class="container mx-auto pt-24">
-          <VideoBlur />
-        </main>
-    </div>
-    </Background>*/
-      }
-      <PagesBackground>
+      <Background>
         <div class="min-h-screen text-white">
           <Navbar
             LoggedIn={data.LoggedIn}
@@ -55,12 +43,12 @@ export default function Home({ data }: PageProps<HomeProps>) {
 
             {/* Content section */}
             <div class="container mx-auto">
-              <Carousel2 Translations={data.Translations} />
+              <FeaturesCarousel Translations={data.Translations} />
+              <ApproachCarousel Translations={data.Translations} />
               <VideoBlur />
             </div>
           </main>
         </div>
-      </PagesBackground>
-    </div>
+      </Background>
   );
 }

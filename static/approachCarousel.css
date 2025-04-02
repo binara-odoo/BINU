@@ -1,0 +1,97 @@
+.approach-container {
+    position: relative;
+    min-height: 400px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 20px;
+    gap: 20px; /* Add space between cards */
+    flex-wrap: wrap; /* Allow cards to wrap on smaller screens */
+    justify-content: center;
+}
+
+.approach-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    width: 280px;
+    background-color: rgba(23, 20, 29, 0.8);
+    border-radius: 10px;
+    box-shadow: -1rem 0 3rem #000;
+    transition: 0.4s ease-out;
+    position: relative;
+    padding: 20px;
+    margin: 10px; /* Add even spacing around cards */
+}
+
+/* Remove the negative margin since we want to see all cards clearly */
+.approach-card:not(:first-child) {
+    margin-left: 10px;
+}
+
+.approach-card:hover {
+    transform: translateY(-10px);
+    transition: 0.4s ease-out;
+}
+
+.approach-card-title {
+    color: #B4E3FF;
+    font-weight: 500;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.approach-card-bar {
+    position: relative;
+    margin: 15px 0;
+    height: 5px;
+    width: 100%;
+}
+
+.approach-card-emptybar {
+    background-color: #2e3033;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
+}
+
+.approach-card-filledbar {
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #B4E3FF, #2992dc);
+    border-radius: 3px;
+    transition: 0.6s ease-out;
+}
+
+.approach-card:hover .approach-card-filledbar {
+    width: 100%;
+}
+
+.approach-card-description {
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 15px;
+    flex-grow: 1; /* Allow description to take remaining space */
+    text-align: justify;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .approach-container {
+        padding: 20px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .approach-card {
+        width: 100%;
+        max-width: 320px;
+        margin: 10px;
+    }
+}
