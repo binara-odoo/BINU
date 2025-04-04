@@ -13,28 +13,28 @@ interface ProfileDropdownProps {
 
 export default function ProfileDropdown({ userInfo, Translations, lang }: ProfileDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [localUserInfo, setLocalUserInfo] = useState(userInfo);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  // Load user info from localStorage on component mount
+  // Reset error state when userInfo.picture changes
   useEffect(() => {
-    const savedUserInfo = localStorage.getItem("userInfo");
-    if (savedUserInfo) {
-      try {
-        const parsedUserInfo = JSON.parse(savedUserInfo);
-        setLocalUserInfo(parsedUserInfo);
-      } catch (error) {
-        console.error("Error parsing user info from localStorage:", error);
-      }
+    if (userInfo?.picture) {
+      setImageError(false);
+      setImageLoaded(false);
     }
-  }, []);
+  }, [userInfo?.picture]);
 
-  // Update localStorage when userInfo changes
-  useEffect(() => {
-    if (userInfo && userInfo.picture) {
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      setLocalUserInfo(userInfo);
-    }
-  }, [userInfo]);
+  const handleImageError = (e: Event) => {
+    const target = e.currentTarget as HTMLImageElement;
+    setImageError(true);
+    target.src = "/default-avatar.svg";
+  };
+
+  const handleImageLoad = () => {
+    setImageLoaded(true);
+  };
+
+  const profileImage = imageError || !userInfo?.picture ? "/default-avatar.svg" : userInfo.picture;
 
   return (
     <div class="relative">
@@ -43,14 +43,20 @@ export default function ProfileDropdown({ userInfo, Translations, lang }: Profil
         onClick={() => setIsOpen(!isOpen)}
         class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-800/50 transition-colors"
       >
-        <img
-          src={localUserInfo?.picture || "/default-avatar.svg"}
-          alt="Profile"
-          class="w-10 h-10 rounded-full"
-          onError={(e) => (e.currentTarget.src = "/default-avatar.svg")}
-        />
+        <div class="relative w-10 h-10">
+          {!imageLoaded && !imageError && (
+            <div class="absolute inset-0 bg-gray-700 rounded-full animate-pulse" />
+          )}
+          <img
+            src={profileImage}
+            alt="Profile"
+            class={`w-10 h-10 rounded-full ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+          />
+        </div>
         <div class="hidden md:block text-left">
-          <div class="text-sm font-medium">{localUserInfo.name || "User"}</div>
+          <div class="text-sm font-medium">{userInfo?.name || "User"}</div>
         </div>
       </button>
 
@@ -58,15 +64,21 @@ export default function ProfileDropdown({ userInfo, Translations, lang }: Profil
         <div class="absolute right-0 mt-2 w-72 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-lg py-2 z-50">
           <div class="px-4 py-3 border-b border-gray-700">
             <div class="flex items-center space-x-3">
-              <img
-                src={localUserInfo?.picture || "/default-avatar.svg"}
-                alt="Profile"
-                class="w-12 h-12 rounded-full"
-                onError={(e) => (e.currentTarget.src = "/default-avatar.svg")}
-              />
+              <div class="relative w-12 h-12">
+                {!imageLoaded && !imageError && (
+                  <div class="absolute inset-0 bg-gray-700 rounded-full animate-pulse" />
+                )}
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  class={`w-12 h-12 rounded-full ${!imageLoaded && !imageError ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
+                  onError={handleImageError}
+                  onLoad={handleImageLoad}
+                />
+              </div>
               <div>
-                <div class="text-sm font-medium">{localUserInfo.name || "User"}</div>
-                <div class="text-xs text-gray-400">{localUserInfo.email}</div>
+                <div class="text-sm font-medium">{userInfo?.name || "User"}</div>
+                <div class="text-xs text-gray-400">{userInfo?.email}</div>
               </div>
             </div>
           </div>

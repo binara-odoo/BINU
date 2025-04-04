@@ -1,9 +1,10 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../components/background/PagesBackground.tsx";
+import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
 import DashboardCard from "../../components/dashboard/DashboardCard.tsx";
+
 
 interface LoginProps {
   LoggedIn: boolean;

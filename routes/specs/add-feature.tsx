@@ -1,21 +1,18 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../components/background/PagesBackground.tsx";
+import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
+import { decodeBase64 } from "https://deno.land/std@0.224.0/encoding/base64.ts";
 
 interface LoginProps {
   LoggedIn: boolean;
   Translations: Translations;
   lang: string;
   system: string;
-}
-
-interface PageData {
-  // menuItems: MenuItem[];
-  user?: {
-    name: string;
-    email: string;
+  userInfo?: {
+    name?: string;
+    email?: string;
     picture?: string;
   };
 }
@@ -27,11 +24,41 @@ export const handler: Handlers<LoginProps> = {
     const system = url.searchParams.get("system") || "";
     const translations = await LoadTranslations(lang);
 
+    // Check authentication
+    const cookies = req.headers.get("cookie") || "";
+    const sessionCookie = cookies.split("; ").find(c => c.startsWith("session="));
+    let session = null;
+    
+    if (sessionCookie) {
+      try {
+        const encodedSession = sessionCookie.split("=")[1];
+        const decodedSession = new TextDecoder().decode(decodeBase64(encodedSession));
+        session = JSON.parse(decodedSession);
+      } catch (error) {
+        console.error("Error decoding session:", error);
+      }
+    }
+
+    // Redirect to login if not authenticated
+    if (!session?.loggedIn) {
+      const loginUrl = new URL("/auth", url.origin);
+      loginUrl.searchParams.set("lang", lang);
+      return new Response("", {
+        status: 303,
+        headers: { Location: loginUrl.toString() },
+      });
+    }
+
     return ctx.render({
-      LoggedIn: false,
+      LoggedIn: true,
       Translations: translations,
       lang: lang,
       system: system,
+      userInfo: {
+        name: session.name,
+        email: session.email,
+        picture: session.picture,
+      },
     });
   },
 };
@@ -76,6 +103,7 @@ export default function AddFeature({ data }: PageProps<LoginProps>) {
             LoggedIn={data.LoggedIn}
             Translations={data.Translations}
             lang={data.lang}
+            userInfo={data.userInfo}
           />
           <main class="max-w-7xl mx-auto flex-1 pt-32">
             <h1 class="text-2xl font-bold text-center mb-8 neon-text">

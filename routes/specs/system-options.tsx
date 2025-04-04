@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../components/background/PagesBackground.tsx";
+import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
 import { decodeBase64 } from "https://deno.land/std@0.224.0/encoding/base64.ts";
 

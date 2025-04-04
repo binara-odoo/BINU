@@ -1,21 +1,19 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../components/background/PagesBackground.tsx";
+import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
+import NewSystemForm from "../../islands/NewSystemForm.tsx";
+import { decodeBase64 } from "https://deno.land/std@0.224.0/encoding/base64.ts";
 
 interface LoginProps {
   LoggedIn: boolean;
   Translations: Translations;
   lang: string;
   system: string;
-}
-
-interface PageData {
-  // menuItems: MenuItem[];
-  user?: {
-    name: string;
-    email: string;
+  userInfo?: {
+    name?: string;
+    email?: string;
     picture?: string;
   };
 }
@@ -27,11 +25,41 @@ export const handler: Handlers<LoginProps> = {
     const system = url.searchParams.get("system") || "";
     const translations = await LoadTranslations(lang);
 
+    // Check authentication
+    const cookies = req.headers.get("cookie") || "";
+    const sessionCookie = cookies.split("; ").find(c => c.startsWith("session="));
+    let session = null;
+    
+    if (sessionCookie) {
+      try {
+        const encodedSession = sessionCookie.split("=")[1];
+        const decodedSession = new TextDecoder().decode(decodeBase64(encodedSession));
+        session = JSON.parse(decodedSession);
+      } catch (error) {
+        console.error("Error decoding session:", error);
+      }
+    }
+
+    // Redirect to login if not authenticated
+    if (!session?.loggedIn) {
+      const loginUrl = new URL("/auth", url.origin);
+      loginUrl.searchParams.set("lang", lang);
+      return new Response("", {
+        status: 303,
+        headers: { Location: loginUrl.toString() },
+      });
+    }
+
     return ctx.render({
-      LoggedIn: false,
+      LoggedIn: true,
       Translations: translations,
       lang: lang,
       system: system,
+      userInfo: {
+        name: session.name,
+        email: session.email,
+        picture: session.picture,
+      },
     });
   },
 };
@@ -82,15 +110,16 @@ export default function NewSystem({ data }: PageProps<LoginProps>) {
 
   return (
     <div class="relative min-h-screen">
-        <head>
-            <title>{ data.Translations.new_system.title }</title>
-        </head>
+      <head>
+        <title>{data.Translations.new_system.title}</title>
+      </head>
       <PagesBackground>
         <div class="flex flex-col relative z-10 min-h-screen bg-black/15 backdrop-blur-md text-white">
           <Navbar
             LoggedIn={data.LoggedIn}
             Translations={data.Translations}
             lang={data.lang}
+            userInfo={data.userInfo}
           />
           <main class="max-w-7xl mx-auto flex-1 pt-32">
             <h1 class="text-2xl font-bold text-center mb-8 neon-text">
@@ -98,37 +127,10 @@ export default function NewSystem({ data }: PageProps<LoginProps>) {
             </h1>
             <div class="max-w-3xl mx-auto mb-20">
               <div class="bg-gray-800/80 backdrop-blur-sm rounded-lg shadow p-6">
-                <form class="space-y-6 ">
-                  {questions.map((question) => (
-                    <div key={question.id} class="space-y-2">
-                      <label class="block text-sm font-medium text-white">
-                        {question.label}
-                      </label>
-                      {question.type === "textarea"
-                        ? (
-                          <textarea
-                            name={question.id}
-                            class="w-full p-2 border rounded-md min-h-[100px] text-white bg-[rgba(16,13,20,0.741)] border-gray-700 focus:border-[#B4E3FF] focus:outline-none focus:ring-1 focus:ring-[#B4E3FF] transition-all duration-300"
-                          />
-                        )
-                        : (
-                          <input
-                            type={question.type}
-                            name={question.id}
-                            class="w-full p-2 border rounded-md text-white bg-[rgba(16,13,20,0.741)] border-gray-700 focus:border-[#B4E3FF] focus:outline-none focus:ring-1 focus:ring-[#B4E3FF] transition-all duration-300"
-                          />
-                        )}
-                    </div>
-                  ))}
-                  <div class="flex justify-end">
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-blue-300 text-white rounded-md hover:bg-blue-600"
-                    >
-                      { data.Translations.new_system.button }
-                    </button>
-                  </div>
-                </form>
+                <NewSystemForm 
+                  questions={questions}
+                  buttonText={data.Translations.new_system.button}
+                />
               </div>
             </div>
           </main>

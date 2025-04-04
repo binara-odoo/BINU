@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Translations } from "../types/translations.ts";
 import { LoadTranslations } from "../utils/i18n.ts";
-import PagesBackground from "../components/background/PagesBackground.tsx";
+import PagesBackground from "../islands/background/PagesBackground.tsx";
 import Navbar from "../islands/navbar/Navbar.tsx";
 
 interface DashboardProps {

@@ -6,6 +6,8 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $account_logout from "./routes/account/logout.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_odoo_users from "./routes/api/odoo-users.ts";
+import * as $api_odoo from "./routes/api/odoo.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
 import * as $auth_index from "./routes/auth/index.tsx";
 import * as $dashboard from "./routes/dashboard.tsx";
@@ -21,6 +23,9 @@ import * as $specs_specs from "./routes/specs/specs.tsx";
 import * as $specs_system_options from "./routes/specs/system-options.tsx";
 import * as $Carousel2 from "./islands/Carousel2.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $NewSystemForm from "./islands/NewSystemForm.tsx";
+import * as $background_Background from "./islands/background/Background.tsx";
+import * as $background_PagesBackground from "./islands/background/PagesBackground.tsx";
 import * as $main_ApproachCarousel from "./islands/main/ApproachCarousel.tsx";
 import * as $main_FeaturesCarousel from "./islands/main/FeaturesCarousel.tsx";
 import * as $main_VideoBlur from "./islands/main/VideoBlur.tsx";
@@ -36,6 +41,8 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/account/logout.tsx": $account_logout,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/api/odoo-users.ts": $api_odoo_users,
+    "./routes/api/odoo.ts": $api_odoo,
     "./routes/auth/callback.ts": $auth_callback,
     "./routes/auth/index.tsx": $auth_index,
     "./routes/dashboard.tsx": $dashboard,
@@ -53,6 +60,9 @@ const manifest = {
   islands: {
     "./islands/Carousel2.tsx": $Carousel2,
     "./islands/Counter.tsx": $Counter,
+    "./islands/NewSystemForm.tsx": $NewSystemForm,
+    "./islands/background/Background.tsx": $background_Background,
+    "./islands/background/PagesBackground.tsx": $background_PagesBackground,
     "./islands/main/ApproachCarousel.tsx": $main_ApproachCarousel,
     "./islands/main/FeaturesCarousel.tsx": $main_FeaturesCarousel,
     "./islands/main/VideoBlur.tsx": $main_VideoBlur,

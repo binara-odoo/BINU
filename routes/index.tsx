@@ -1,5 +1,5 @@
 import Navbar from "../islands/navbar/Navbar.tsx";
-import Background from "../components/background/Background.tsx";
+import Background from "../islands/background/Background.tsx";
 import VideoBlur from "../islands/main/VideoBlur.tsx";
 import { Translations } from "../types/translations.ts";
 import { Handlers, PageProps } from "https://deno.land/x/fresh@1.7.3/server.ts";
