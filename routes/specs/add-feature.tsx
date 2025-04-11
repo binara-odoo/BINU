@@ -1,9 +1,10 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../islands/background/PagesBackground.tsx";
+//import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
 import { decodeBase64 } from "https://deno.land/std@0.224.0/encoding/base64.ts";
+import AddFeatureForm from "../../islands/specs/AddFeatureForm.tsx";
 
 interface LoginProps {
   LoggedIn: boolean;
@@ -26,13 +27,17 @@ export const handler: Handlers<LoginProps> = {
 
     // Check authentication
     const cookies = req.headers.get("cookie") || "";
-    const sessionCookie = cookies.split("; ").find(c => c.startsWith("session="));
+    const sessionCookie = cookies.split("; ").find((c) =>
+      c.startsWith("session=")
+    );
     let session = null;
-    
+
     if (sessionCookie) {
       try {
         const encodedSession = sessionCookie.split("=")[1];
-        const decodedSession = new TextDecoder().decode(decodeBase64(encodedSession));
+        const decodedSession = new TextDecoder().decode(
+          decodeBase64(encodedSession),
+        );
         session = JSON.parse(decodedSession);
       } catch (error) {
         console.error("Error decoding session:", error);
@@ -64,88 +69,73 @@ export const handler: Handlers<LoginProps> = {
 };
 
 export default function AddFeature({ data }: PageProps<LoginProps>) {
-    const fields = [
-        {
-          id: "feature",
-          label: data.Translations.add_feature.feature,
-          type: "text",
-        },
-        {
-          id: "why",
-          label: data.Translations.add_feature.why,
-          type: "textarea",
-        },
-        {
-          id: "users",
-          label: data.Translations.add_feature.users,
-          type: "textarea",
-        },
-        {
-          id: "requirements",
-          label: data.Translations.add_feature.requirements,
-          type: "textarea",
-        },
-        {
-          id: "integration",
-          label: data.Translations.add_feature.integration,
-          type: "textarea",
-        },
-      ];
+  const questions = [
+    {
+      id: "feature",
+      label: data.Translations.add_feature.feature,
+      type: "text",
+    },
+    {
+      id: "why",
+      label: data.Translations.add_feature.why,
+      type: "textarea",
+    },
+    {
+      id: "users",
+      label: data.Translations.add_feature.users,
+      type: "textarea",
+    },
+    {
+      id: "requirements",
+      label: data.Translations.add_feature.requirements,
+      type: "textarea",
+    },
+    {
+      id: "priority",
+      label: data.Translations.new_system.priority,
+      type: "radio",
+    },
+    {
+      id: "integration",
+      label: data.Translations.add_feature.integration,
+      type: "textarea",
+    },
+    {
+      id: "images",
+      label: data.Translations.add_feature.images,
+      type: "file",
+    },
+  ];
 
   return (
     <div class="relative min-h-screen">
       <head>
         <title>{data.Translations.add_feature.title} {data.system}</title>
       </head>
-      <PagesBackground>
-        <div class="flex flex-col relative z-10 min-h-screen bg-black/15 backdrop-blur-md text-white">
-          <Navbar
-            LoggedIn={data.LoggedIn}
-            Translations={data.Translations}
-            lang={data.lang}
-            userInfo={data.userInfo}
-          />
-          <main class="max-w-7xl mx-auto flex-1 pt-32">
-            <h1 class="text-2xl font-bold text-center mb-8 neon-text">
-              {data.Translations.add_feature.title} {data.system}
-            </h1>
+      <div class="flex flex-col relative z-10 min-h-screen  text-white">
+        <Navbar
+          LoggedIn={data.LoggedIn}
+          Translations={data.Translations}
+          lang={data.lang}
+          userInfo={data.userInfo}
+        />
+        <main class="max-w-7xl mx-auto flex-1 pt-32">
+          <h1 class="text-2xl font-bold text-center mb-8 text-[#8E8F1D]">
+            {data.Translations.add_feature.title} {data.system}
+          </h1>
 
-            <div class="max-w-3xl mx-auto mb-20">
-              <div class="w-full bg-gray-800/80 backdrop-blur-sm rounded-lg shadow p-6">
-                <form class="space-y-6">
-                  {fields.map((field) => (
-                    <div key={field.id} class="space-y-2">
-                      <label class="block text-sm font-medium text-white">
-                        {field.label}
-                      </label>
-                      {field.type === "textarea" ? (
-                        <textarea
-                          name={field.id}
-                          class="w-full p-2 border rounded-md min-h-[100px] text-white bg-[rgba(16,13,20,0.741)] border-gray-700 focus:border-[#B4E3FF] focus:outline-none focus:ring-1 focus:ring-[#B4E3FF] transition-all duration-300"
-                        />
-                      ) : (
-                        <input
-                          type={field.type}
-                          name={field.id}
-                          class="w-full p-2 border rounded-md text-white bg-[rgba(16,13,20,0.741)] border-gray-700 focus:border-[#B4E3FF] focus:outline-none focus:ring-1 focus:ring-[#B4E3FF] transition-all duration-300"
-                        />
-                      )}
-                    </div>
-                  ))}
-                  <div class="flex justify-end">
-                    <button
-                      type="submit"
-                      class="px-4 py-2 text-white rounded-md bg-blue-300"
-                    >
-                      {data.Translations.add_feature.button}
-                    </button>
-                  </div>
-                </form>
-              </div>
+          <div class="w-[95%] sm:w-[85%] md:w-[650px] lg:w-[750px] xl:w-[850px] mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+            <div class="form-container bg-gray-200 shadow-lg rounded-lg text-[#8E8F1D] p-6">
+              <AddFeatureForm 
+                questions={questions}
+                buttonText={data.Translations.add_feature.button}
+                systemName={data.system}
+                translations={data.Translations}
+              />
             </div>
-          </main>
-        </div>
-      </PagesBackground>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

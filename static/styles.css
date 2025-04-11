@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Theme styles */
+html {
+  transition: background-color 0.3s ease;
+}
+
+html.dark-theme {
+  background-color: #121212;
+  color: #FFF;
+}
+
+html.dark-theme .form-container {
+  background-color: #222222;
+}
+
+body.light-theme {
+  background-color: #FFF;
+  color: #121212;
+}
+
+.form-container {
+  background-color: #f3f4f6;  /* gray-100 equivalent */
+  transition: background-color 0.3s ease;
+}
+
+.input-field{
+  background-color: #FFF;
+  color: #000;
+  border: none
+}
+
+html.dark-theme .input-field{
+  background-color: #121212;
+  color: #FFF;
+}

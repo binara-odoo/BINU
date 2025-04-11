@@ -61,44 +61,70 @@
     },
     "specs_menu":{
         "title": "Sistema de requerimientos",
-        "systems": "Sistemas",
-        "new_system": "Nuevo sistema",
-        "existing_system": "Sistema existente"
+        "systems": "Proyectos",
+        "new_system": "Nuevo proyecto",
+        "existing_system": "Proyecto existente"
     },
     "new_system":{
-        "title": "Nuevo sistema",
-        "new_system_name": "Nombre del sistema",
-        "purpose" : "¿Cuál es el propósito principal del sistema?",
+        "title": "Nuevo proyecto",
+        "new_system_name": "Nombre del proyecto",
+        "related_systems": "¿Está relacionado con algún proyecto?",
+        "purpose" : "¿Cuál es el propósito principal del proyecto?",
         "users": "¿Quiénes son los usuarios principales?",
-        "timeline": "¿Cuál es el tiempo estimado de entrega?",
+        "priority": "¿Cuál es el nivel de prioridad?",
         "budget": "¿Cuál es el presupuesto estimado?",
         "features": "¿Cuáles son las características principales necesarias?",
-        "date": "¿Cuál es la fecha de entrega?",
+        "images": "¿Tienes imágenes que puedan ayudar a entender el proyecto?",
+        "date": "Fecha promesa de entrega",
         "responsible": "¿Quién es el responsable?",
-        "button": "Crear requerimiento"
+        "select_user": "Seleccionar usuario",
+        "loading_users": "Cargando usuarios...",
+        "select_project": "Seleccionar proyecto",
+        "loading_projects": "Cargando proyectos...",
+        "button": "Crear requerimiento",
+        "success_message": "Proyecto creado con éxito en Odoo.",
+        "generic_error": "Ocurrió un error al crear el proyecto",
+        "submitting": "Creando proyecto..."
     },
     "existing_system":{
-        "title": "Seleccionar sistema existente",
+        "title": "Seleccionar proyecto existente",
         "options": "Opciones para ",
         "fix": "Corregir",
         "add": "Agregar"
     },
     "fix_system":{
         "title": "Corrección para ",
+        "select_project": "Seleccionar proyecto de Odoo",
+        "loading_projects": "Cargando proyectos...",
+        "project_placeholder": "Selecciona una opción",
+        "project_error": "Debes seleccionar un proyecto de Odoo",
         "feature": "¿Qué característica no está funcionando?",
         "expected": "¿Cuál es el comportamiento esperado?",
         "current": "¿Cuál es el comportamiento actual?",
         "steps": "Pasos para reproducir el problema:",
         "context": "Contexto adicional o capturas de pantalla:",
-        "button": "Enviar requerimiento"
+        "button": "Enviar requerimiento",
+        "success_message": "Corrección enviada correctamente",
+        "generic_error": "Ocurrió un error al enviar la corrección",
+        "submitting": "Enviando corrección..."
     },
     "add_feature": {
         "title": "Nueva funcionalidad para ",
+        "select_project": "Seleccionar proyecto de Odoo",
+        "loading_projects": "Cargando proyectos...",
+        "project_placeholder": "Selecciona un proyecto",
         "feature": "¿Qué nueva funcionalidad necesita?",
         "why": "¿Por qué se necesita esta funcionalidad?",
         "users": "¿Quiénes usarán esta funcionalidad?",
         "requirements": "¿Cuáles son los requisitos específicos?",
-        "integration": "¿Cómo se integrará con el sistema actual?",
+        "integration": "¿Cómo se integrará con el proyecto actual?",
+        "images": "¿Tienes imágenes que puedan ayudar a entender la funcionalidad?",
         "button": "Enviar requerimiento"
+    },
+    "priority_levels": {
+        "critical": "1. Crítico (Atención inmediata)",
+        "high": "2. Alta prioridad",
+        "medium": "3. Prioridad media",
+        "low": "4. Prioridad baja"
     }
 }

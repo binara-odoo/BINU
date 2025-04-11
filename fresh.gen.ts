@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $account_logout from "./routes/account/logout.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_odoo_projects from "./routes/api/odoo-projects.ts";
 import * as $api_odoo_users from "./routes/api/odoo-users.ts";
 import * as $api_odoo from "./routes/api/odoo.ts";
 import * as $auth_callback from "./routes/auth/callback.ts";
@@ -13,6 +14,7 @@ import * as $auth_index from "./routes/auth/index.tsx";
 import * as $dashboard from "./routes/dashboard.tsx";
 import * as $dashboard_dashboard from "./routes/dashboard/dashboard.tsx";
 import * as $dashboard_dashboard2 from "./routes/dashboard/dashboard2.tsx";
+import * as $error from "./routes/error.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $specs_add_feature from "./routes/specs/add-feature.tsx";
@@ -23,7 +25,6 @@ import * as $specs_specs from "./routes/specs/specs.tsx";
 import * as $specs_system_options from "./routes/specs/system-options.tsx";
 import * as $Carousel2 from "./islands/Carousel2.tsx";
 import * as $Counter from "./islands/Counter.tsx";
-import * as $NewSystemForm from "./islands/NewSystemForm.tsx";
 import * as $background_Background from "./islands/background/Background.tsx";
 import * as $background_PagesBackground from "./islands/background/PagesBackground.tsx";
 import * as $main_ApproachCarousel from "./islands/main/ApproachCarousel.tsx";
@@ -33,6 +34,10 @@ import * as $navbar_LanguageDropdown from "./islands/navbar/LanguageDropdown.tsx
 import * as $navbar_Navbar from "./islands/navbar/Navbar.tsx";
 import * as $navbar_ProfileDropdown from "./islands/navbar/ProfileDropdown.tsx";
 import * as $navbar_Sidebar from "./islands/navbar/Sidebar.tsx";
+import * as $specs_AddFeatureForm from "./islands/specs/AddFeatureForm.tsx";
+import * as $specs_FixSystemForm from "./islands/specs/FixSystemForm.tsx";
+import * as $specs_NewSystemForm from "./islands/specs/NewSystemForm.tsx";
+import * as $specs_SelectSystem from "./islands/specs/SelectSystem.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -41,6 +46,7 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/account/logout.tsx": $account_logout,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/api/odoo-projects.ts": $api_odoo_projects,
     "./routes/api/odoo-users.ts": $api_odoo_users,
     "./routes/api/odoo.ts": $api_odoo,
     "./routes/auth/callback.ts": $auth_callback,
@@ -48,6 +54,7 @@ const manifest = {
     "./routes/dashboard.tsx": $dashboard,
     "./routes/dashboard/dashboard.tsx": $dashboard_dashboard,
     "./routes/dashboard/dashboard2.tsx": $dashboard_dashboard2,
+    "./routes/error.tsx": $error,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/specs/add-feature.tsx": $specs_add_feature,
@@ -60,7 +67,6 @@ const manifest = {
   islands: {
     "./islands/Carousel2.tsx": $Carousel2,
     "./islands/Counter.tsx": $Counter,
-    "./islands/NewSystemForm.tsx": $NewSystemForm,
     "./islands/background/Background.tsx": $background_Background,
     "./islands/background/PagesBackground.tsx": $background_PagesBackground,
     "./islands/main/ApproachCarousel.tsx": $main_ApproachCarousel,
@@ -70,6 +76,10 @@ const manifest = {
     "./islands/navbar/Navbar.tsx": $navbar_Navbar,
     "./islands/navbar/ProfileDropdown.tsx": $navbar_ProfileDropdown,
     "./islands/navbar/Sidebar.tsx": $navbar_Sidebar,
+    "./islands/specs/AddFeatureForm.tsx": $specs_AddFeatureForm,
+    "./islands/specs/FixSystemForm.tsx": $specs_FixSystemForm,
+    "./islands/specs/NewSystemForm.tsx": $specs_NewSystemForm,
+    "./islands/specs/SelectSystem.tsx": $specs_SelectSystem,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
