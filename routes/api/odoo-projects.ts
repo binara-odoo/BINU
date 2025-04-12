@@ -3,7 +3,7 @@ import { Handlers } from "$fresh/server.ts";
 const ODOO_API_URL = Deno.env.get("ODOO_API_URL");
 const ODOO_API_DATABASE = Deno.env.get("ODOO_API_DATABASE");
 const ODOO_API_USERNAME = Deno.env.get("ODOO_API_USERNAME");
-const ODOO_API_PASSWORD = Deno.env.get("ODOO_API_PASSWORD");
+const ODOO_API_KEY = Deno.env.get("ODOO_API_KEY");
 
 async function authenticate() {
     try {
@@ -18,20 +18,32 @@ async function authenticate() {
                 params: {
                     service: "common",
                     method: "authenticate",
-                    args: [ODOO_API_DATABASE, ODOO_API_USERNAME, ODOO_API_PASSWORD, {}],
+                    args: [
+                        ODOO_API_DATABASE,
+                        ODOO_API_USERNAME,
+                        ODOO_API_KEY,
+                        {},
+                    ],
                 },
                 id: 1,
             }),
         });
 
         const data = await response.json();
+
         if (data.error) {
-            throw new Error(data.error.data.message || 'Authentication failed');
+            throw new Error(data.error.data?.message || "Error de autenticación");
         }
-        return data.result;
-    } catch (error) {
-        console.error('Authentication error:', error);
-        throw error;
+
+        const uid = data.result;
+        if (!uid || typeof uid !== "number") {
+            throw new Error("No se pudo autenticar al usuario.");
+        }
+
+        return uid;
+    } catch (err) {
+        console.error("Error autenticando:", err);
+        throw err;
     }
 }
 
@@ -56,15 +68,13 @@ export async function createProject(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.project",
                     "create",
                     [{
                         name: data.name,
                         date_start: data.date,
                         user_id: parseInt(data.responsible),
-                        // Remove custom fields that don't exist in the model
-                        // x_studio_related_systems: data.relatedSystems,
                     }],
                 ],
             },
@@ -108,7 +118,7 @@ export async function getProjectTaskCount(projectId: string) {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "search_count",
                     [[["project_id", "=", parseInt(projectId)]]],
@@ -161,7 +171,7 @@ async function getTicketsDevOpsProjectId(): Promise<number> {
             args: [
                 ODOO_API_DATABASE,
                 uid,
-                ODOO_API_PASSWORD,
+                ODOO_API_KEY,
                 "project.project",
                 "search_read",
                 [[["name", "=", "Tickets DevOps"]]],
@@ -227,17 +237,16 @@ export async function createTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
                         name: data.name,
                         project_id: parseInt(data.projectId), // Use the project ID passed in the request
                         x_studio_related_systems: data.relatedSystems,
-                        x_studio_purpouse_1: data.purpose,
+                        x_studio_purpose: data.purpose,
                         x_studio_users: data.users,
                         x_studio_priority: data.priority,
-                        x_studio_budget: data.budget,
                         x_studio_features: data.features,
                         priority: priorityValue,
                         x_studio_images: data.images ? data.images.map(img => img.datas).join(',') : false,
@@ -256,7 +265,7 @@ export async function createTask(data: {
         const result = await response.json();
         
         if (result.error) {
-            throw new Error(result.error.data?.message || "Error creating task");
+            throw new Error(result.error.data?.message || "Error creating task in original project");
         }
 
         const taskId = result.result;
@@ -271,17 +280,16 @@ export async function createTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
                         name: data.name,
-                        project_id: ticketsDevOpsProjectId, // Use the Tickets DevOps project ID
+                        project_id: ticketsDevOpsProjectId,
                         x_studio_related_systems: data.relatedSystems,
-                        x_studio_purpouse_1: data.purpose,
+                        x_studio_purpose: data.purpose,
                         x_studio_users: data.users,
                         x_studio_priority: data.priority,
-                        x_studio_budget: data.budget,
                         x_studio_features: data.features,
                         priority: priorityValue,
                         x_studio_images: data.images ? data.images.map(img => img.datas).join(',') : false,
@@ -301,6 +309,7 @@ export async function createTask(data: {
         
         if (ticketsDevOpsResult.error) {
             console.error("Error creating task in Tickets DevOps project:", ticketsDevOpsResult.error);
+            // Don't throw here, we still want to return the original task ID
         }
 
         const ticketsDevOpsTaskId = ticketsDevOpsResult.result;
@@ -318,7 +327,7 @@ export async function createTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{
@@ -357,7 +366,7 @@ export async function createTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{
@@ -413,7 +422,7 @@ async function getProjectInitials(projectId: number): Promise<string> {
             args: [
                 ODOO_API_DATABASE,
                 uid,
-                ODOO_API_PASSWORD,
+                ODOO_API_KEY,
                 "project.project",
                 "read",
                 [[projectId]],
@@ -468,7 +477,7 @@ async function getNextFixTaskNumber(projectInitials: string): Promise<number> {
             args: [
                 ODOO_API_DATABASE,
                 uid,
-                ODOO_API_PASSWORD,
+                ODOO_API_KEY,
                 "project.task",
                 "search_read",
                 [[["name", "ilike", `${projectInitials}FIX`]]],
@@ -552,7 +561,7 @@ export async function createFixTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
@@ -595,12 +604,12 @@ export async function createFixTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
-                        name: customTaskName, // Use the same custom task name
-                        project_id: ticketsDevOpsProjectId, // Use the Tickets DevOps project ID
+                        name: customTaskName,
+                        project_id: ticketsDevOpsProjectId,
                         x_studio_fix_feature: data.feature,
                         x_studio_fix_expected: data.expected,
                         x_studio_fix_current: data.current,
@@ -641,7 +650,7 @@ export async function createFixTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{
@@ -680,7 +689,7 @@ export async function createFixTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{
@@ -723,100 +732,104 @@ export async function createFixTask(data: {
 
 // Function to get the Odoo tag ID
 async function getOdooTagId(): Promise<number> {
-    const uid = await authenticate();
-    if (!uid) {
-        throw new Error("Authentication failed");
-    }
+    try {
+        const uid = await authenticate();
+        if (!uid) {
+            throw new Error("Authentication failed");
+        }
 
-    const odooData = {
-        jsonrpc: "2.0",
-        method: "call",
-        params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-                ODOO_API_DATABASE,
-                uid,
-                ODOO_API_PASSWORD,
-                "project.tags",
-                "search_read",
-                [[["name", "=", "Odoo"]]],
-                {
-                    fields: ["id"],
-                },
-            ],
-        },
-        id: 2,
-    };
+        const odooData = {
+            jsonrpc: "2.0",
+            method: "call",
+            params: {
+                service: "object",
+                method: "execute_kw",
+                args: [
+                    ODOO_API_DATABASE,
+                    uid,
+                    ODOO_API_KEY,
+                    "project.tags",
+                    "search_read",
+                    [[["name", "=", "Odoo"]]],
+                    {
+                        fields: ["id"],
+                    },
+                ],
+            },
+            id: 1,
+        };
 
-    const response = await fetch(ODOO_API_URL!, {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(odooData),
-    });
+        const response = await fetch(ODOO_API_URL!, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(odooData),
+        });
 
-    const result = await response.json();
-    
-    if (result.error) {
-        throw new Error(result.error.data?.message || "Error getting Odoo tag ID");
-    }
+        const result = await response.json();
+        
+        if (result.error) {
+            throw new Error(result.error.data?.message || "Error getting Odoo tag ID");
+        }
 
-    if (result.result && result.result.length > 0) {
+        // Return just the ID
         return result.result[0].id;
+    } catch (error) {
+        console.error("Error getting Odoo tag ID:", error);
+        throw error;
     }
-
-    throw new Error("Odoo tag not found");
 }
 
 // Function to get a tag ID by its name
-async function getTagIdByName(tagName: string): Promise<number> {
-    const uid = await authenticate();
-    if (!uid) {
-        throw new Error("Authentication failed");
-    }
+async function getTagIdByName(name: string): Promise<number> {
+    try {
+        const uid = await authenticate();
+        if (!uid) {
+            throw new Error("Authentication failed");
+        }
 
-    const odooData = {
-        jsonrpc: "2.0",
-        method: "call",
-        params: {
-            service: "object",
-            method: "execute_kw",
-            args: [
-                ODOO_API_DATABASE,
-                uid,
-                ODOO_API_PASSWORD,
-                "project.tags",
-                "search_read",
-                [[["name", "=", tagName]]],
-                {
-                    fields: ["id"],
-                },
-            ],
-        },
-        id: 2,
-    };
+        const odooData = {
+            jsonrpc: "2.0",
+            method: "call",
+            params: {
+                service: "object",
+                method: "execute_kw",
+                args: [
+                    ODOO_API_DATABASE,
+                    uid,
+                    ODOO_API_KEY,
+                    "project.tags",
+                    "search_read",
+                    [[["name", "=", name]]],
+                    {
+                        fields: ["id"],
+                    },
+                ],
+            },
+            id: 2,
+        };
 
-    const response = await fetch(ODOO_API_URL!, {
-        method: "POST",
-        headers: { 
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(odooData),
-    });
+        const response = await fetch(ODOO_API_URL!, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(odooData),
+        });
 
-    const result = await response.json();
-    
-    if (result.error) {
-        throw new Error(result.error.data?.message || `Error getting ${tagName} tag ID`);
-    }
+        const result = await response.json();
+        
+        if (result.error) {
+            throw new Error(result.error.data?.message || `Error getting ${name} tag ID`);
+        }
 
-    if (result.result && result.result.length > 0) {
+        // Return just the ID
         return result.result[0].id;
+    } catch (error) {
+        console.error(`Error getting ${name} tag ID:`, error);
+        throw error;
     }
-
-    throw new Error(`${tagName} tag not found`);
 }
 
 interface OdooProject {
@@ -860,10 +873,10 @@ export const handler: Handlers = {
                     args: [
                         ODOO_API_DATABASE,
                         uid,
-                        ODOO_API_PASSWORD,
+                        ODOO_API_KEY,
                         "project.project",
                         "search_read",
-                        [[]],
+                        [],
                         {
                             fields: ["id", "name", "partner_id", "date_start", "date", "tag_ids"],
                         },
@@ -980,8 +993,6 @@ export const handler: Handlers = {
             if (body.type === "fix") {
                 const { projectId, feature, expected, current, steps, priority, images } = body;
                 
-                console.log("Received fix task data:", { projectId, feature, expected, current, steps, priority });
-                
                 // Check each field individually and provide specific error messages
                 if (!projectId) {
                     return new Response(JSON.stringify({ error: "El ID del proyecto es requerido" }), {
@@ -1036,8 +1047,6 @@ export const handler: Handlers = {
 
             if (body.type === "newFeature") {
                 const { projectId, feature, expected, current, steps, priority, images } = body;
-                
-                console.log("Received new feature task data:", { projectId, feature, expected, current, steps, priority });
                 
                 // Check each field individually and provide specific error messages
                 if (!projectId) {
@@ -1131,7 +1140,7 @@ async function getNextNewFeatureTaskNumber(): Promise<number> {
         args: [
           ODOO_API_DATABASE,
           uid,
-          ODOO_API_PASSWORD,
+          ODOO_API_KEY,
           "project.task",
           "search_read",
           [
@@ -1207,12 +1216,12 @@ export async function createNewFeatureTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
-                        name: customTaskName, // Use the custom task name
-                        project_id: parseInt(data.projectId), // Use the project ID passed in the request
+                        name: customTaskName,
+                        project_id: parseInt(data.projectId),
                         x_studio_add_feature: data.feature,
                         x_studio_add_why: data.expected,
                         x_studio_add_users: data.current,
@@ -1251,12 +1260,12 @@ export async function createNewFeatureTask(data: {
                 args: [
                     ODOO_API_DATABASE,
                     uid,
-                    ODOO_API_PASSWORD,
+                    ODOO_API_KEY,
                     "project.task",
                     "create",
                     [{
-                        name: customTaskName, // Use the same custom task name
-                        project_id: ticketsDevOpsProjectId, // Use the Tickets DevOps project ID
+                        name: customTaskName,
+                        project_id: ticketsDevOpsProjectId,
                         x_studio_add_feature: data.feature,
                         x_studio_add_why: data.expected,
                         x_studio_add_users: data.current,
@@ -1298,7 +1307,7 @@ export async function createNewFeatureTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{
@@ -1337,7 +1346,7 @@ export async function createNewFeatureTask(data: {
                         args: [
                             ODOO_API_DATABASE,
                             uid,
-                            ODOO_API_PASSWORD,
+                            ODOO_API_KEY,
                             "ir.attachment",
                             "create",
                             [{

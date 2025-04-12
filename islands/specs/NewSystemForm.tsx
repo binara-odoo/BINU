@@ -3,6 +3,8 @@ import { useEffect } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Translations } from "../../types/translations.ts";
 import Alert from "../../components/Alert.tsx";
+import FileInput from "../../components/FileInput.tsx";
+import PriorityRadioGroup from "../../components/PriorityRadioGroup.tsx";
 
 interface Question {
   id: string;
@@ -37,7 +39,8 @@ export default function NewSystemForm(
   const isLoading = useSignal(false);
   const isLoadingProjects = useSignal(false);
   const formData = useSignal<Record<string, string | string[]>>({
-    priority: "2" // Default priority value (medium)
+    priority: "2", // Default priority value (medium)
+    images: [] // Initialize images array
   });
 
   const handleChange = (e: Event) => {
@@ -48,7 +51,6 @@ export default function NewSystemForm(
     
     if (target.type === "radio") {
       formData.value = { ...formData.value, [target.name]: target.value };
-      console.log(`Radio selected: ${target.name} = ${target.value}`);
     } else if (target.type === "file") {
       const fileInput = target as HTMLInputElement;
       const files = fileInput.files;
@@ -72,7 +74,6 @@ export default function NewSystemForm(
                 ...formData.value, 
                 [target.name]: base64Strings 
               };
-              console.log(`Files converted to base64: ${target.name}`, base64Strings);
             }
           };
           
@@ -92,12 +93,10 @@ export default function NewSystemForm(
         if (data.success && data.data) {
           users.value = data.data || [];
         } else {
-          console.error("Error al obtener usuarios:", data.error);
           error.value = data.error || "Error al cargar usuarios";
         }
       })
-      .catch((err) => {
-        console.error("Error al obtener usuarios de Odoo:", err);
+      .catch(() => {
         error.value = "Error al cargar usuarios";
       })
       .finally(() => {
@@ -119,14 +118,11 @@ export default function NewSystemForm(
             // Use just data if odooProjects doesn't exist
             projects.value = data.data || [];
           }
-          console.log("Projects loaded:", projects.value);
         } else {
-          console.error("Error al obtener proyectos:", data.error);
           error.value = data.error || "Error al cargar proyectos";
         }
       })
-      .catch((err) => {
-        console.error("Error al obtener proyectos de Odoo:", err);
+      .catch(() => {
         error.value = "Error al cargar proyectos";
       })
       .finally(() => {
@@ -134,13 +130,8 @@ export default function NewSystemForm(
       });
   }, []);
 
-  useEffect(() => {
-    console.log("Form data updated:", formData.value);
-  }, [formData.value]);
-
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
-    console.log("Submitting form with data:", formData.value);
     
     if (!IS_BROWSER) return;
 
@@ -187,8 +178,6 @@ export default function NewSystemForm(
         }
       });
       
-      console.log("FormData entries:", Object.fromEntries(formDataObj.entries()));
-      
       // Submit the form to the server-side handler
       const response = await fetch("/specs/new-system", {
         method: "POST",
@@ -220,7 +209,6 @@ export default function NewSystemForm(
         ? err.message
         : "";
       error.value = `❌ ${errorMessage}`;
-      console.error("Error submitting form:", err);
     } finally {
       isSubmitting.value = false;
     }
@@ -233,16 +221,15 @@ export default function NewSystemForm(
           <label class="block text-sm md:text-base lg:text-lg font-medium">
             {question.label}
           </label>
-          {question.type === "textarea"
-            ? (
-              <textarea
-                name={question.id}
-                value={formData.value[question.id] || ""}
-                onInput={handleChange}
-                class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md min-h-[100px] md:min-h-[150px] lg:min-h-[200px] text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
-              />
-            )
-            : question.type === "selector" && question.id === "responsible"
+          {question.type === "textarea" ? (
+            <textarea
+              name={question.id}
+              value={formData.value[question.id] || ""}
+              onInput={handleChange}
+              required
+              class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md min-h-[100px] md:min-h-[150px] lg:min-h-[200px] text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
+            />
+          ) : question.type === "selector" && question.id === "responsible"
             ? (
               isLoading.value
                 ? (
@@ -292,26 +279,26 @@ export default function NewSystemForm(
             )
             : question.type === "radio" && question.id === "priority"
             ? (
-              <select
-                name={question.id}
-                value={formData.value[question.id] || "1"}
+              <PriorityRadioGroup
+                value={formData.value[question.id] as string || "medium"}
                 onChange={handleChange}
-                class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
-              >
-                <option value="critical">{translations.priority_levels?.critical}</option>
-                <option value="high">{translations.priority_levels?.high}</option>
-                <option value="medium">{translations.priority_levels?.medium}</option>
-                <option value="low">{translations.priority_levels?.low}</option>
-              </select>
+                translations={translations}
+              />
             )
             : question.type === "file"
             ? (
-              <input
-                type="file"
-                name={question.id}
+              <FileInput
+                id={question.id}
+                translations={{
+                  images_drag: translations.add_feature.images_drag,
+                  images_or: translations.add_feature.images_or,
+                  images_button: translations.add_feature.images_button,
+                  images_no_files: translations.add_feature.images_no_files,
+                  images_count_single: translations.add_feature.images_count_single,
+                  images_count_multiple: translations.add_feature.images_count_multiple,
+                }}
+                formData={formData}
                 onChange={handleChange}
-                multiple
-                class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
               />
             )
             : question.type === "date"
@@ -330,6 +317,7 @@ export default function NewSystemForm(
                 name={question.id}
                 value={formData.value[question.id] || ""}
                 onInput={handleChange}
+                required
                 class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
               />
             )}

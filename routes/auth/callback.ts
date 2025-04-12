@@ -47,7 +47,6 @@ export const handler: Handlers = {
     );
 
     const userData = await userResponse.json();
-    console.log("User data from Google:", userData); // Debug log
 
     const { email, name, picture } = userData;
 

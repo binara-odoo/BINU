@@ -3,7 +3,7 @@ import { Handlers } from "$fresh/server.ts";
 const ODOO_API_URL = Deno.env.get("ODOO_API_URL");
 const ODOO_API_DATABASE = Deno.env.get("ODOO_API_DATABASE");
 const ODOO_API_USERNAME = Deno.env.get("ODOO_API_USERNAME");
-const ODOO_API_PASSWORD = Deno.env.get("ODOO_API_PASSWORD");
+const ODOO_API_KEY = Deno.env.get("ODOO_API_KEY");
 
 async function authenticate() {
     try {
@@ -18,7 +18,7 @@ async function authenticate() {
                 params: {
                     service: "common",
                     method: "authenticate",
-                    args: [ODOO_API_DATABASE, ODOO_API_USERNAME, ODOO_API_PASSWORD, {}],
+                    args: [ODOO_API_DATABASE, ODOO_API_USERNAME, ODOO_API_KEY, {}],
                 },
                 id: 1,
             }),
@@ -61,7 +61,7 @@ export const handler: Handlers = {
                     args: [
                         ODOO_API_DATABASE,
                         uid,
-                        ODOO_API_PASSWORD,
+                        ODOO_API_KEY,
                         'res.users',
                         'search_read',
                         [[['active', '=', true]]],

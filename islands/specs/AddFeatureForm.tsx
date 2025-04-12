@@ -3,6 +3,8 @@ import { useEffect } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Translations } from "../../types/translations.ts";
 import Alert from "../../components/Alert.tsx";
+import FileInput from "../../components/FileInput.tsx";
+import PriorityRadioGroup from "../../components/PriorityRadioGroup.tsx";
 
 interface Question {
   id: string;
@@ -105,9 +107,6 @@ export default function AddFeatureForm({
       project: projectId,
       projectName: projectName
     };
-    
-    console.log("Project selected:", selectedProjectId.value, selectedProjectName.value);
-    console.log("Updated formData:", formData.value);
   };
 
   const handleSubmit = async (e: Event) => {
@@ -133,11 +132,6 @@ export default function AddFeatureForm({
     // Ensure projectName is a string
     projectName = String(projectName);
     
-    console.log("Final project ID:", projectId);
-    console.log("Final project name:", projectName);
-    console.log("Form data:", formData.value);
-    console.log("Form data object:", Object.fromEntries(formDataObj.entries()));
-
     // Validate project ID only for Odoo
     if (!projectId && systemName === "Odoo") {
       error.value = "Por favor seleccione un proyecto";
@@ -173,8 +167,6 @@ export default function AddFeatureForm({
         null
     };
     
-    console.log("Sending data to API:", newFeatureData);
-
     try {
       const response = await fetch("/api/odoo-projects", {
         method: "POST",
@@ -185,7 +177,6 @@ export default function AddFeatureForm({
       });
 
       const result = await response.json();
-      console.log("API response:", result);
 
       if (!response.ok) {
         throw new Error(result.error || translations.add_feature.project_error);
@@ -215,14 +206,12 @@ export default function AddFeatureForm({
       fetch("/api/odoo-projects")
         .then((res) => res.json())
         .then((data) => {
-          console.log("API response:", data);
           if (data.success && data.odooProjects) {
             projects.value = data.odooProjects;
             
             // If we have projects, set the first one as default
             if (data.odooProjects.length > 0) {
               const firstProject = data.odooProjects[0];
-              console.log("Setting default project:", firstProject);
               selectedProjectId.value = firstProject.id.toString();
               selectedProjectName.value = firstProject.name;
               formData.value = { 
@@ -230,7 +219,6 @@ export default function AddFeatureForm({
                 project: firstProject.id.toString(),
                 projectName: firstProject.name
               };
-              console.log("Updated formData:", formData.value);
             }
           } else {
             console.error(translations.add_feature.project_error, data.error);
@@ -250,7 +238,6 @@ export default function AddFeatureForm({
       fetch("/api/odoo-projects")
         .then((res) => res.json())
         .then((data) => {
-          console.log("API response for non-Odoo system:", data);
           if (data.success && data.data) {
             // Search for a project that matches the system name
             const matchingProject = data.data.find(
@@ -258,7 +245,6 @@ export default function AddFeatureForm({
             );
             
             if (matchingProject) {
-              console.log("Found matching project:", matchingProject);
               selectedProjectId.value = matchingProject.id.toString();
               selectedProjectName.value = matchingProject.name;
               formData.value = { 
@@ -266,7 +252,6 @@ export default function AddFeatureForm({
                 project: matchingProject.id.toString(),
                 projectName: matchingProject.name
               };
-              console.log("Updated formData for matching project:", formData.value);
             } else {
               console.log("No matching project found, using system name");
               selectedProjectId.value = "0"; // Use a default ID if no match found
@@ -353,24 +338,24 @@ export default function AddFeatureForm({
               class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md min-h-[100px] md:min-h-[150px] lg:min-h-[200px] text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
             />
           ) : question.type === "radio" && question.id === "priority" ? (
-            <select
-              name={question.id}
-              value={formData.value[question.id] || "2"}
+            <PriorityRadioGroup
+              value={formData.value[question.id] as string || "medium"}
               onChange={handleChange}
-              class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
-            >
-              <option value="critical">{translations.priority_levels?.critical}</option>
-              <option value="high">{translations.priority_levels?.high}</option>
-              <option value="medium">{translations.priority_levels?.medium}</option>
-              <option value="low">{translations.priority_levels?.low}</option>
-            </select>
+              translations={translations}
+            />
           ) : question.type === "file" ? (
-            <input
-              type="file"
-              name={question.id}
+            <FileInput
+              id={question.id}
+              translations={{
+                images_drag: translations.add_feature.images_drag,
+                images_or: translations.add_feature.images_or,
+                images_button: translations.add_feature.images_button,
+                images_no_files: translations.add_feature.images_no_files,
+                images_count_single: translations.add_feature.images_count_single,
+                images_count_multiple: translations.add_feature.images_count_multiple,
+              }}
+              formData={formData}
               onChange={handleChange}
-              multiple
-              class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
             />
           ) : (
             <input

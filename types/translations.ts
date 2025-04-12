@@ -85,6 +85,12 @@ export interface Translations {
         success_message: string;
         generic_error: string;
         submitting: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
     },
     existing_system: {
         title: string;
@@ -109,20 +115,32 @@ export interface Translations {
         success_message: string;
         generic_error: string;
         submitting: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
     },
     add_feature: {
         title: string;
+        select_project: string;
+        loading_projects: string;
+        project_placeholder: string;
+        project_error: string;
         feature: string;
         why: string;
         users: string;
         requirements: string;
         integration: string;
-        button: string;
-        select_project: string;
-        loading_projects: string;
-        project_placeholder: string;
-        project_error: string;
         images: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
+        button: string;
         success_message: string;
         generic_error: string;
         submitting: string;

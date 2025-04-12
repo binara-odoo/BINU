@@ -3,7 +3,7 @@ import { Handlers } from "$fresh/server.ts";
 const ODOO_API_URL = Deno.env.get("ODOO_API_URL");
 const ODOO_API_DATABASE = Deno.env.get("ODOO_API_DATABASE");
 const ODOO_API_USERNAME = Deno.env.get("ODOO_API_USERNAME");
-const ODOO_API_PASSWORD = Deno.env.get("ODOO_API_PASSWORD");
+const ODOO_API_KEY = Deno.env.get("ODOO_API_KEY");
 
 async function authenticate() {
     try {
@@ -18,20 +18,32 @@ async function authenticate() {
                 params: {
                     service: "common",
                     method: "authenticate",
-                    args: [ODOO_API_DATABASE, ODOO_API_USERNAME, ODOO_API_PASSWORD, {}],
+                    args: [
+                        ODOO_API_DATABASE,
+                        ODOO_API_USERNAME,
+                        ODOO_API_KEY,
+                        {},
+                    ],
                 },
                 id: 1,
             }),
         });
 
         const data = await response.json();
+
         if (data.error) {
-            throw new Error(data.error.data.message || 'Authentication failed');
+            throw new Error(data.error.data?.message || "Error de autenticación");
         }
-        return data.result;
-    } catch (error) {
-        console.error('Authentication error:', error);
-        throw error;
+
+        const uid = data.result;
+        if (!uid || typeof uid !== "number") {
+            throw new Error("No se pudo autenticar al usuario.");
+        }
+
+        return uid;
+    } catch (err) {
+        console.error("Error autenticando:", err);
+        throw err;
     }
 }
 
@@ -77,7 +89,7 @@ export const handler: Handlers = {
                     args: [
                         ODOO_API_DATABASE,
                         uid,
-                        ODOO_API_PASSWORD,
+                        ODOO_API_KEY,
                         model,
                         "create",
                         [data],
