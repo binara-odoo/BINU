@@ -68,37 +68,87 @@ export interface Translations {
     new_system: {
         title: string;
         new_system_name: string;
+        related_systems: string;
         purpose: string;
         users: string;
-        timeline: string;
+        priority: string;
         budget: string;
         features: string;
+        images: string;
         date: string;
         responsible: string;
+        select_user: string;
+        loading_users: string;
+        select_project: string;
+        loading_projects: string;
         button: string;
+        success_message: string;
+        generic_error: string;
+        submitting: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
     },
     existing_system: {
         title: string;
         options: string;
         fix: string;
         add: string;
+        loading_projects: string;
+        odoo_projects: string;
     },
     fix_system: {
         title: string;
+        select_project: string;
+        loading_projects: string;
+        project_placeholder: string;
+        project_error: string;
         feature: string;
         expected: string;
         current: string;
         steps: string;
         context: string;
         button: string;
+        success_message: string;
+        generic_error: string;
+        submitting: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
     },
     add_feature: {
         title: string;
+        select_project: string;
+        loading_projects: string;
+        project_placeholder: string;
+        project_error: string;
         feature: string;
         why: string;
         users: string;
         requirements: string;
         integration: string;
+        images: string;
+        images_button: string;
+        images_no_files: string;
+        images_drag: string;
+        images_or: string;
+        images_count_single: string;
+        images_count_multiple: string;
         button: string;
+        success_message: string;
+        generic_error: string;
+        submitting: string;
+    },
+    priority_levels?: {
+        critical: string;
+        high: string;
+        medium: string;
+        low: string;
     }
 }

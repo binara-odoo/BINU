@@ -9,6 +9,12 @@ interface LanguageDropdownProps {
 export default function LanguageDropdown({ languages, currentLang, menuText }: LanguageDropdownProps) {
   const showMenu = useSignal(false);
 
+  const getLanguageUrl = (langCode: string) => {
+    const url = new URL(globalThis.location.href);
+    url.searchParams.set('lang', langCode);
+    return url.toString();
+  };
+
   // Filter out the current language from options
   // const availableLanguages = languages.filter(lang => lang.code !== currentLang);
 
@@ -33,7 +39,7 @@ export default function LanguageDropdown({ languages, currentLang, menuText }: L
           {languages.map((language) => (
             <a
               key={language.code}
-              href={`?lang=${language.code}`}
+              href={getLanguageUrl(language.code)}
               class="block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors"
             >
               {language.name}

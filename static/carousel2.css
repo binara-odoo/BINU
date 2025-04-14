@@ -76,15 +76,15 @@ input[type=radio] {
 }
 
 .neon-text {
-  color: #B4E3FF;
+  color: #8E8F1D;
   font-weight: 200;
   letter-spacing: 8px;
   font-weight: 300;
   text-shadow: 
-    0 0 1px rgba(180, 227, 255, 0.2),
-    0 0 2px rgba(180, 227, 255, 0.2),
-    0 0 3px rgba(180, 227, 255, 0.2);
-  filter: brightness(1.2) drop-shadow(0 0 2px rgba(180, 227, 255, 0.3));
+    0 0 1px rgba(142, 143, 29, 0.2),
+    0 0 2px rgba(142, 143, 29, 0.2),
+    0 0 3px rgba(142, 143, 29, 0.2);
+  filter: brightness(1.2) drop-shadow(0 0 2px rgba(142, 143, 29, 0.3));
 }
 
 @keyframes pulsate {

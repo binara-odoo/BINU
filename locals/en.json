@@ -60,36 +60,81 @@
         "specs": "Specs"
     },
     "specs_menu":{
-        "title": "System requirements",
-        "systems": "Systems",
-        "new_system": "New system",
-        "existing_system": "Existing system"
+        "title": "Project requirements",
+        "systems": "Projects",
+        "new_system": "New project",
+        "existing_system": "Existing project"
     },
     "new_system":{
-        "title": "New system",
-        "new_system_name": "System name",
-        "purpose": "What is the main purpose of the system?",
-        "users": "Who are the main users of the system?",
-        "timeline": "What is the estimated delivery time?",
+        "title": "New project",
+        "new_system_name": "Project name",
+        "related_systems": "Is it related to any project?",
+        "purpose": "What is the main purpose of the project?",
+        "users": "Who are the main users of the project?",
+        "priority": "What is the priority level?",
         "budget": "What is the estimated budget?",
         "features": "What are the main features needed?",
-        "date": "What is the delivery date?",
+        "images": "Do you have images that can help understand the project?",
+        "date": "Promise delivery date",
         "responsible": "Who is the responsible?",
-        "button": "Create requirement"
+        "select_user": "Select user",
+        "loading_users": "Loading users...",
+        "select_project": "Select project",
+        "loading_projects": "Loading projects...",
+        "button": "Create requirement",
+        "success_message": "Project created successfully in Odoo.",
+        "generic_error": "An error occurred while creating the project",
+        "submitting": "Creating project..."
     },
     "existing_system":{
-        "title": "Select existing system",
+        "title": "Select existing project",
         "options": "Options for ",
         "fix": "Fix",
         "add": "Add"
     },
     "fix_system":{
         "title": "Correction for ",
+        "select_project": "Select Odoo project",
+        "loading_projects": "Loading projects...",
+        "project_placeholder": "Select an option",
+        "project_error": "You must select an Odoo project",
         "feature": "What feature is not working?",
         "expected": "What is the expected behavior?",
         "current": "What is the current behavior?",
         "steps": "Steps to reproduce the problem:",
         "context": "Additional context or screenshots:",
-        "button": "Send requirement"
+        "button": "Send requirement",
+        "success_message": "Requirement sent successfully",
+        "generic_error": "An error occurred while sending the requirement",
+        "submitting": "Sending requirement..."
+    },
+    "add_feature": {
+        "title": "New feature for ",
+        "select_project": "Select Odoo project",
+        "loading_projects": "Loading projects...",
+        "project_placeholder": "Select a project",
+        "project_error": "Please select a project",
+        "feature": "What new feature needs?",
+        "why": "Why is this feature needed?",
+        "users": "Who will use this feature?",
+        "requirements": "What are the specific requirements?",
+        "integration": "How will it be integrated with the current project?",
+        "images": "Do you have images that can help understand the feature?",
+        "images_button": "Choose files",
+        "images_no_files": "No files selected",
+        "images_drag": "Drag and drop your files here",
+        "images_or": "or",
+        "images_count_single": "1 file selected",
+        "images_count_multiple": "{count} files selected",
+        "button": "Send requirement",
+        "success_message": "Feature added successfully",
+        "generic_error": "An error occurred while adding the feature",
+        "submitting": "Submitting..."
+    },
+    "priority_levels": {
+        "critical": "1. Critical (Immediate attention)",
+        "high": "2. High priority",
+        "medium": "3. Medium priority",
+        "low": "4. Low priority"
     }
 }

@@ -44,42 +44,42 @@ export default function Sidebar({ Translations, lang, isOpen, onToggle }: Sideba
     {
       title: Translations.dashboard.calendar,
       icon: "/dashboardIcons/calendar.gif",
-      href: `/calendar?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.information,
       icon: "/dashboardIcons/information.gif",
-      href: `/information?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.contacts,
       icon: "/dashboardIcons/contacts.gif",
-      href: `/contacts?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.sales,
       icon: "/dashboardIcons/sales.gif",
-      href: `/sales?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.documents,
       icon: "/dashboardIcons/documents.gif",
-      href: `/documents?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.projects,
       icon: "/dashboardIcons/projects.gif",
-      href: `/projects?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.evaluations,
       icon: "/dashboardIcons/evaluations.gif",
-      href: `/evaluations?lang=${lang}`,
+      href: "#",
     },
     {
       title: Translations.dashboard.specs,
       icon: "/dashboardIcons/specs.gif",
-      href: `/specs?lang=${lang}`,
+      href: `/specs/specs?lang=${lang}`,
     }
   ];
 
@@ -109,15 +109,15 @@ export default function Sidebar({ Translations, lang, isOpen, onToggle }: Sideba
               <a
                 href={item.href}
                 onClick={() => isMobile && onToggle()}
-                class="flex items-center p-2 text-white rounded-sm hover:bg-gray-700/50 group relative transition-all duration-300 hover:transform hover:-translate-y-1"
+                class="flex items-center p-2 text-white rounded-sm group relative transition-all duration-300 hover:transform hover:-translate-y-1"
               >
-                <div class="absolute top-0 left-1/2 w-0.5 h-0.5 rounded-sm transition-all duration-400 group-hover:w-[calc(100%+4px)] group-hover:h-[calc(100%+4px)] group-hover:top-[-2px] group-hover:left-[-2px] group-hover:bg-transparent group-hover:border-2 group-hover:border-[#4DA6FF] group-hover:shadow-[0_0_15px_#4DA6FF,0_0_20px_#1E90FF,0_0_30px_#0047AB]"></div>
+                <div class="absolute top-0 left-1/2 w-0.5 h-0.5 rounded-sm transition-all duration-400 group-hover:w-[calc(100%+4px)] group-hover:h-[calc(100%+4px)] group-hover:top-[-2px] group-hover:left-[-2px] group-hover:bg-transparent group-hover:border-2 group-hover:border-[#8E8F1D] group-hover:shadow-[0_0_15px_#8E8F1D,0_0_20px_#fcff32,0_0_30px_#888a00]"></div>
                 <img
                   src={item.icon}
                   alt={item.title}
-                  class="w-5 h-5 text-[#B4E3FF] group-hover:text-[#B4E3FF] transition duration-75"
+                  class="w-5 h-5 text-[#8E8F1D] group-hover:text-[#8E8F1D] transition duration-75"
                 />
-                <span class="flex-1 ms-3 whitespace-nowrap text-[#B4E3FF] font-medium">{item.title}</span>
+                <span class="flex-1 ms-3 whitespace-nowrap text-[#8E8F1D] font-medium">{item.title}</span>
               </a>
             </li>
           ))}

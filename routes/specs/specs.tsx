@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Translations } from "../../types/translations.ts";
-import PagesBackground from "../../islands/background/PagesBackground.tsx";
+// import PagesBackground from "../../islands/background/PagesBackground.tsx";
 import { LoadTranslations } from "../../utils/i18n.ts";
 import Navbar from "../../islands/navbar/Navbar.tsx";
 import { decodeBase64 } from "https://deno.land/std@0.224.0/encoding/base64.ts";
@@ -24,13 +24,17 @@ export const handler: Handlers<LoginProps> = {
 
     // Check authentication
     const cookies = req.headers.get("cookie") || "";
-    const sessionCookie = cookies.split("; ").find(c => c.startsWith("session="));
+    const sessionCookie = cookies.split("; ").find((c) =>
+      c.startsWith("session=")
+    );
     let session = null;
-    
+
     if (sessionCookie) {
       try {
         const encodedSession = sessionCookie.split("=")[1];
-        const decodedSession = new TextDecoder().decode(decodeBase64(encodedSession));
+        const decodedSession = new TextDecoder().decode(
+          decodeBase64(encodedSession),
+        );
         session = JSON.parse(decodedSession);
       } catch (error) {
         console.error("Error decoding session:", error);
@@ -66,38 +70,37 @@ export default function Specs({ data }: PageProps<LoginProps>) {
       <head>
         <title>{data.Translations.specs_menu.title}</title>
       </head>
-      <PagesBackground>
-        <div class="flex flex-col relative z-10 min-h-screen bg-black/15 backdrop-blur-md text-white">
-          <Navbar
-            LoggedIn={data.LoggedIn}
-            Translations={data.Translations}
-            lang={data.lang}
-            userInfo={data.userInfo}
-          />  
-          <main class="max-w-7xl mx-auto flex-1 pt-32">
-            <h1 class="text-2xl font-bold text-center mb-8 neon-text">
-              {data.Translations.specs_menu.title}
-            </h1>
-            <div class="max-w-2xl mx-auto">
-              <h2 class="text-xl font-semibold mb-4 neon-text">
-                {data.Translations.specs_menu.systems}
-              </h2>
-              <div class="bg-gray-800/80 backdrop-blur-sm rounded-lg shadow">
-                <div class="p-4 hover:bg-gray-900 rounded-t-lg border-b cursor-pointer">
-                  <a href={`/specs/new-system?lang=${data.lang}`} class="block">
-                    {data.Translations.specs_menu.new_system}
-                  </a>
-                </div>
-                <div class="p-4 hover:bg-gray-900 rounded-b-lg cursor-pointer">
-                  <a href={`/specs/select-system?lang=${data.lang}`} class="block">
-                    {data.Translations.specs_menu.existing_system}
-                  </a>
-                </div>
+
+      <div class="flex flex-col relative z-10 min-h-screen text-white">
+        <Navbar
+          LoggedIn={data.LoggedIn}
+          Translations={data.Translations}
+          lang={data.lang}
+          userInfo={data.userInfo}
+        />
+        <main class="max-w-7xl mx-auto flex-1 pt-32">
+          <h1 class="text-2xl font-bold text-center mb-8 text-[#8E8F1D]">
+            {data.Translations.specs_menu.title}
+          </h1>
+          <div class="max-w-2xl mx-auto">
+            <div class="form-container shadow-lg rounded-lg text-[#8E8F1D] p-4 sm:p-6 md:p-8">
+              <div class="p-4 hover:bg-[#121212] cursor-pointer rounded-lg">
+                <a href={`/specs/new-system?lang=${data.lang}`} class="block">
+                  {data.Translations.specs_menu.new_system}
+                </a>
+              </div>
+              <div class="p-4 hover:bg-[#121212] cursor-pointer rounded-lg">
+                <a
+                  href={`/specs/select-system?lang=${data.lang}`}
+                  class="block"
+                >
+                  {data.Translations.specs_menu.existing_system}
+                </a>
               </div>
             </div>
-          </main>
-        </div>
-      </PagesBackground>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

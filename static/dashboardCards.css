@@ -26,7 +26,7 @@
 }
 
 .dashboard-card-title {
-    color: #B4E3FF;
+    color: #8E8F1D;
     font-weight: 500;
     font-size: 0.9rem;
     text-align: center;
@@ -37,7 +37,7 @@
     position: relative;
     height: 2px;
     width: 100%;
-    background-color: #B4E3FF;
+    background-color: #8E8F1D;
     margin: 0 0 20px 0;
 }
 
@@ -62,10 +62,10 @@
     width: 2px;
     height: 2px;
     transform: translateX(-50%);
-    background: #B4E3FF;
+    background: #8E8F1D;
     border-radius: 10px;
     transition: all 0.4s ease;
-    box-shadow: 0 0 10px #B4E3FF, 0 0 20px #B4E3FF;
+    box-shadow: 0 0 10px #8E8F1D, 0 0 20px #8E8F1D;
 }
 
 .dashboard-card:hover::before {
@@ -75,8 +75,8 @@
     left: -2px;
     transform: none;
     background: transparent;
-    border: 2px solid #B4E3FF;
-    box-shadow: 0 0 10px #B4E3FF, 0 0 20px #B4E3FF;
+    border: 2px solid #8E8F1D;
+    box-shadow: 0 0 10px #8E8F1D, 0 0 20px #8E8F1D;
 }
 
 @media (max-width: 1200px) {
