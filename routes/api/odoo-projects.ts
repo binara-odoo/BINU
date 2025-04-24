@@ -227,6 +227,20 @@ export async function createTask(data: {
         // Convert priority to a number
         const priorityValue = parseInt(data.priority);
 
+        // Create description with questions and responses
+        const description = `
+Priority Level: ${getPriorityText(data.priority)}<br><br>
+What systems are related to this one?<br><br>
+${data.relatedSystems}<br><br>
+What is the purpose of this system?<br><br>
+${data.purpose}<br><br>
+Who are the users of this system?<br><br>
+${data.users}<br><br>
+What is the budget for this system?<br><br>
+${data.budget}<br><br>
+What are the features of this system?<br><br>
+${data.features}`;
+
         // Create task in the newly created project
         const odooData = {
             jsonrpc: "2.0",
@@ -242,7 +256,8 @@ export async function createTask(data: {
                     "create",
                     [{
                         name: data.name,
-                        project_id: parseInt(data.projectId), // Use the project ID passed in the request
+                        project_id: parseInt(data.projectId),
+                        description: description,
                         x_studio_related_systems: data.relatedSystems,
                         x_studio_purpose: data.purpose,
                         x_studio_users: data.users,
@@ -286,6 +301,7 @@ export async function createTask(data: {
                     [{
                         name: data.name,
                         project_id: ticketsDevOpsProjectId,
+                        description: description,
                         x_studio_related_systems: data.relatedSystems,
                         x_studio_purpose: data.purpose,
                         x_studio_users: data.users,
@@ -309,7 +325,6 @@ export async function createTask(data: {
         
         if (ticketsDevOpsResult.error) {
             console.error("Error creating task in Tickets DevOps project:", ticketsDevOpsResult.error);
-            // Don't throw here, we still want to return the original task ID
         }
 
         const ticketsDevOpsTaskId = ticketsDevOpsResult.result;
@@ -332,10 +347,11 @@ export async function createTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: taskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -371,10 +387,11 @@ export async function createTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: ticketsDevOpsTaskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -395,7 +412,6 @@ export async function createTask(data: {
             }
         }
 
-        // Return both task IDs
         return {
             originalTaskId: taskId,
             ticketsDevOpsTaskId: ticketsDevOpsTaskId
@@ -551,6 +567,18 @@ export async function createFixTask(data: {
         // Generate custom fix task name
         const customTaskName = await generateFixTaskName(parseInt(data.projectId));
 
+        // Create description with questions and responses
+        const description = `
+Priority Level: ${getPriorityText(data.priority)}<br><br>
+What feature needs to be fixed?<br><br>
+${data.feature}<br><br>
+What is the expected behavior?<br><br>
+${data.expected}<br><br>
+What is the current behavior?<br><br>
+${data.current}<br><br>
+What are the steps to reproduce the issue?<br><br>
+${data.steps}`;
+
         // Create task in the newly created project
         const odooData = {
             jsonrpc: "2.0",
@@ -565,8 +593,9 @@ export async function createFixTask(data: {
                     "project.task",
                     "create",
                     [{
-                        name: customTaskName, // Use the custom task name
-                        project_id: parseInt(data.projectId), // Use the project ID passed in the request
+                        name: customTaskName,
+                        project_id: parseInt(data.projectId),
+                        description: description,
                         x_studio_fix_feature: data.feature,
                         x_studio_fix_expected: data.expected,
                         x_studio_fix_current: data.current,
@@ -610,6 +639,7 @@ export async function createFixTask(data: {
                     [{
                         name: customTaskName,
                         project_id: ticketsDevOpsProjectId,
+                        description: description,
                         x_studio_fix_feature: data.feature,
                         x_studio_fix_expected: data.expected,
                         x_studio_fix_current: data.current,
@@ -655,10 +685,11 @@ export async function createFixTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: taskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -694,10 +725,11 @@ export async function createFixTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: ticketsDevOpsTaskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -718,7 +750,6 @@ export async function createFixTask(data: {
             }
         }
 
-        // Return both task IDs and the custom task name
         return {
             originalTaskId: taskId,
             ticketsDevOpsTaskId: ticketsDevOpsTaskId,
@@ -1206,6 +1237,18 @@ export async function createNewFeatureTask(data: {
         // Generate custom new feature task name
         const customTaskName = await generateNewFeatureTaskName(parseInt(data.projectId));
 
+        // Create description with questions and responses
+        const description = `
+Priority Level: ${getPriorityText(data.priority)}<br><br>
+What is the new feature?<br><br>
+${data.feature}<br><br>
+Why is this feature needed?<br><br>
+${data.expected}<br><br>
+Who are the users of this feature?<br><br>
+${data.current}<br><br>
+What are the implementation requirements?<br><br>
+${data.steps}`;
+
         // Create task in the newly created project
         const odooData = {
             jsonrpc: "2.0",
@@ -1222,6 +1265,7 @@ export async function createNewFeatureTask(data: {
                     [{
                         name: customTaskName,
                         project_id: parseInt(data.projectId),
+                        description: description,
                         x_studio_add_feature: data.feature,
                         x_studio_add_why: data.expected,
                         x_studio_add_users: data.current,
@@ -1266,6 +1310,7 @@ export async function createNewFeatureTask(data: {
                     [{
                         name: customTaskName,
                         project_id: ticketsDevOpsProjectId,
+                        description: description,
                         x_studio_add_feature: data.feature,
                         x_studio_add_why: data.expected,
                         x_studio_add_users: data.current,
@@ -1312,10 +1357,11 @@ export async function createNewFeatureTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: taskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -1351,10 +1397,11 @@ export async function createNewFeatureTask(data: {
                             "create",
                             [{
                                 name: attachment.name,
-                                type: attachment.type,
+                                type: "binary",
                                 datas: attachment.datas,
-                                res_model: attachment.res_model,
+                                res_model: "project.task",
                                 res_id: ticketsDevOpsTaskId,
+                                mimetype: attachment.type,
                             }],
                         ],
                     },
@@ -1375,7 +1422,6 @@ export async function createNewFeatureTask(data: {
             }
         }
 
-        // Return both task IDs and the custom task name
         return {
             originalTaskId: taskId,
             ticketsDevOpsTaskId: ticketsDevOpsTaskId,
@@ -1384,5 +1430,21 @@ export async function createNewFeatureTask(data: {
     } catch (error) {
         console.error("Error in createNewFeatureTask:", error);
         throw error;
+    }
+}
+
+// Helper function to convert priority number to text
+function getPriorityText(priority: string): string {
+    switch (priority) {
+        case "0":
+            return "4. Low priority";
+        case "1":
+            return "3. Medium priority";
+        case "2":
+            return "2. High priority";
+        case "3":
+            return "1. Critical (Immediate attention)";
+        default:
+            return "3. Medium priority";
     }
 }

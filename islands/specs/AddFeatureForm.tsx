@@ -22,12 +22,30 @@ interface OdooProject {
   tag_ids: number[];
 }
 
+interface FileData {
+  base64: string;
+  name: string;
+  type: string;
+}
+
+type FormDataValue = string | string[] | FileData[];
+
+interface FormData {
+  [key: string]: FormDataValue;
+}
+
 interface AddFeatureFormProps {
   questions: Question[];
   buttonText: string;
   systemName: string;
   translations: Translations;
 }
+
+// Helper function to safely get string value from form data
+const getStringValue = (value: FormDataValue): string => {
+  if (typeof value === 'string') return value;
+  return '';
+};
 
 export default function AddFeatureForm({
   questions,
@@ -42,8 +60,9 @@ export default function AddFeatureForm({
   const isLoading = useSignal(false);
   const selectedProjectId = useSignal<string>("");
   const selectedProjectName = useSignal<string>("");
-  const formData = useSignal<Record<string, string | string[]>>({
-    priority: "2" // Default priority value (medium)
+  const formData = useSignal<FormData>({
+    priority: "2", // Default priority value (medium)
+    images: [] // Initialize images array
   });
   
   const handleChange = (e: Event) => {
@@ -59,8 +78,8 @@ export default function AddFeatureForm({
       const files = fileInput.files;
       
       if (files && files.length > 0) {
-        // Create an array to store base64 strings
-        const base64Strings: string[] = [];
+        // Create an array to store file data
+        const fileDataArray: FileData[] = [];
         
         // Process each file
         for (let i = 0; i < files.length; i++) {
@@ -69,13 +88,17 @@ export default function AddFeatureForm({
           
           reader.onload = () => {
             const base64String = (reader.result as string).split(',')[1];
-            base64Strings.push(base64String);
+            fileDataArray.push({
+              base64: base64String,
+              name: file.name,
+              type: file.type
+            });
             
             // When all files are processed, update the form data
-            if (base64Strings.length === files.length) {
+            if (fileDataArray.length === files.length) {
               formData.value = { 
                 ...formData.value, 
-                [target.name]: base64Strings 
+                [target.name]: fileDataArray 
               };
             }
           };
@@ -158,10 +181,10 @@ export default function AddFeatureForm({
       steps: formData.value["requirements"] as string || formDataObj.get("requirements") as string,
       priority: formData.value["priority"] as string || formDataObj.get("priority") as string || "2",
       images: formData.value["images"] ? 
-        (formData.value["images"] as string[]).map(base64Data => ({
-          name: "image.jpg",
-          type: "binary",
-          datas: base64Data,
+        (formData.value["images"] as FileData[]).map(fileData => ({
+          name: fileData.name,
+          type: fileData.type,
+          datas: fileData.base64,
           res_model: "project.task"
         })) : 
         null
@@ -184,7 +207,7 @@ export default function AddFeatureForm({
 
       success.value = translations.add_feature.success_message || "New feature submitted successfully!";
       form.reset();
-      formData.value = { priority: "2" }; // Reset to default
+      formData.value = { priority: "2", images: [] }; // Reset to default
     } catch (err) {
       console.error("Error submitting form:", err);
       error.value = err instanceof Error ? err.message : translations.add_feature.generic_error;
@@ -332,7 +355,7 @@ export default function AddFeatureForm({
           {question.type === "textarea" ? (
             <textarea
               name={question.id}
-              value={formData.value[question.id] || ""}
+              value={getStringValue(formData.value[question.id])}
               onInput={handleChange}
               required
               class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md min-h-[100px] md:min-h-[150px] lg:min-h-[200px] text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
@@ -361,7 +384,7 @@ export default function AddFeatureForm({
             <input
               type={question.type}
               name={question.id}
-              value={formData.value[question.id] || ""}
+              value={getStringValue(formData.value[question.id])}
               onInput={handleChange}
               required
               class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
@@ -397,4 +420,4 @@ export default function AddFeatureForm({
       </div>
     </form>
   );
-} 
+}
