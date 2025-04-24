@@ -3,8 +3,10 @@
 .env.test.local
 .env.production.local
 .env.local
+.env
 
 # Fresh build directory
 _fres
 # npm dependencies
 node_modules/
+.env

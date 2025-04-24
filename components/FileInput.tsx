@@ -1,5 +1,17 @@
 import { Signal } from "@preact/signals";
 
+interface FileData {
+  base64: string;
+  name: string;
+  type: string;
+}
+
+type FormDataValue = string | string[] | FileData[];
+
+interface FormData {
+  [key: string]: FormDataValue;
+}
+
 interface FileInputProps {
   id: string;
   translations: {
@@ -10,7 +22,7 @@ interface FileInputProps {
     images_count_single: string;
     images_count_multiple: string;
   };
-  formData: Signal<Record<string, string | string[]>>;
+  formData: Signal<FormData>;
   onChange: (e: Event) => void;
 }
 
@@ -46,16 +58,20 @@ export default function FileInput({ id, translations, formData, onChange }: File
     
     if (!e.dataTransfer?.files) return;
 
-    // Convert dropped files to base64 and add them to existing files
+    // Convert dropped files to FileData and add them to existing files
     Array.from(e.dataTransfer.files).forEach(file => {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = (reader.result as string).split(',')[1];
         // Add new file to existing files
-        const currentFiles = formData.value[id] as string[] || [];
+        const currentFiles = formData.value[id] as FileData[] || [];
         formData.value = {
           ...formData.value,
-          [id]: [...currentFiles, base64String]
+          [id]: [...currentFiles, {
+            base64: base64String,
+            name: file.name,
+            type: file.type
+          }]
         };
         // Notify parent form of the change
         onChange(new Event('change'));
@@ -70,10 +86,14 @@ export default function FileInput({ id, translations, formData, onChange }: File
       reader.onload = () => {
         const base64String = (reader.result as string).split(',')[1];
         // Add new file to existing files
-        const currentFiles = formData.value[id] as string[] || [];
+        const currentFiles = formData.value[id] as FileData[] || [];
         formData.value = {
           ...formData.value,
-          [id]: [...currentFiles, base64String]
+          [id]: [...currentFiles, {
+            base64: base64String,
+            name: file.name,
+            type: file.type
+          }]
         };
         // Notify parent form of the change
         onChange(new Event('change'));
@@ -83,7 +103,7 @@ export default function FileInput({ id, translations, formData, onChange }: File
   };
 
   const handleDelete = (index: number) => {
-    const currentFiles = formData.value[id] as string[];
+    const currentFiles = formData.value[id] as FileData[];
     if (!currentFiles) return;
 
     // Remove the file at the specified index
@@ -99,8 +119,97 @@ export default function FileInput({ id, translations, formData, onChange }: File
     onChange(new Event('change'));
   };
 
-  const hasFiles = formData.value[id] && Array.isArray(formData.value[id]) && (formData.value[id] as string[]).length > 0;
-  const files = hasFiles ? formData.value[id] as string[] : [];
+  const getFileIcon = (fileType: string, fileName: string = '') => {
+    const extension = fileName.toLowerCase().split('.').pop() || '';
+    
+    // PDF files
+    if (fileType.includes('pdf') || extension === 'pdf') {
+      return (
+        <svg class="h-8 w-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      );
+    }
+
+    // Word files
+    const wordTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (wordTypes.some(type => fileType.includes(type)) || ['doc', 'docx'].includes(extension)) {
+      return (
+        <svg class="h-8 w-8 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+      );
+    }
+
+    // Excel files
+    const excelTypes = [
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+      'text/csv'
+    ];
+    if (excelTypes.some(type => fileType.includes(type)) || ['xls', 'xlsx', 'csv'].includes(extension)) {
+      return (
+        <svg class="h-8 w-8 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="8" y1="13" x2="16" y2="13"></line>
+          <line x1="8" y1="17" x2="16" y2="17"></line>
+          <rect x="8" y="12" width="8" height="6"></rect>
+        </svg>
+      );
+    }
+
+    // PowerPoint files
+    const powerPointTypes = [
+      'application/vnd.ms-powerpoint',
+      'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    ];
+    if (powerPointTypes.some(type => fileType.includes(type)) || ['ppt', 'pptx'].includes(extension)) {
+      return (
+        <svg class="h-8 w-8 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <circle cx="12" cy="14" r="4"></circle>
+          <path d="M12 10v8"></path>
+        </svg>
+      );
+    }
+
+    // Default document icon
+    return (
+      <svg class="h-8 w-8 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+      </svg>
+    );
+  };
+
+  const getFilePreview = (fileData: FileData) => {
+    // Check if the file is an image
+    if (fileData.type.startsWith('image/')) {
+      return (
+        <img 
+          src={`data:${fileData.type};base64,${fileData.base64}`}
+          alt={fileData.name}
+          class="w-full h-full object-cover"
+        />
+      );
+    }
+    
+    // For non-image files, show the document icon
+    return getFileIcon(fileData.type, fileData.name);
+  };
+
+  const hasFiles = formData.value[id] && Array.isArray(formData.value[id]) && (formData.value[id] as FileData[]).length > 0;
+  const files = hasFiles ? formData.value[id] as FileData[] : [];
 
   return (
     <div class="relative">
@@ -133,16 +242,17 @@ export default function FileInput({ id, translations, formData, onChange }: File
           ) : (
             <div class="flex flex-col items-center justify-center p-4 w-full">
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4 w-full">
-                {files.map((base64Data, index) => (
+                {files.map((fileData, index) => (
                   <div 
                     key={index} 
                     class="relative group/item aspect-square bg-[#8E8F1D]/5 rounded-lg overflow-hidden"
                   >
-                    <img 
-                      src={`data:image/jpeg;base64,${base64Data}`}
-                      alt={`Uploaded image ${index + 1}`}
-                      class="w-full h-full object-cover"
-                    />
+                    <div class="w-full h-full flex flex-col items-center justify-center p-4">
+                      {getFilePreview(fileData)}
+                      <span class="mt-2 text-xs text-gray-500 truncate w-full text-center">
+                        {fileData.name}
+                      </span>
+                    </div>
                     <button
                       type="button"
                       onClick={(e) => {
@@ -181,7 +291,7 @@ export default function FileInput({ id, translations, formData, onChange }: File
             }}
             multiple
             class="hidden"
-            accept="image/*"
+            accept="*/*"
           />
         </label>
       </div>

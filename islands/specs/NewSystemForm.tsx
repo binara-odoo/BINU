@@ -28,6 +28,24 @@ interface OdooProject {
   name: string;
 }
 
+interface FileData {
+  base64: string;
+  name: string;
+  type: string;
+}
+
+type FormDataValue = string | string[] | FileData[];
+
+interface FormData {
+  [key: string]: FormDataValue;
+}
+
+// Helper function to safely get string value from form data
+const getStringValue = (value: FormDataValue): string => {
+  if (typeof value === 'string') return value;
+  return '';
+};
+
 export default function NewSystemForm(
   { questions, buttonText, translations }: NewSystemFormProps,
 ) {
@@ -38,7 +56,7 @@ export default function NewSystemForm(
   const projects = useSignal<OdooProject[]>([]);
   const isLoading = useSignal(false);
   const isLoadingProjects = useSignal(false);
-  const formData = useSignal<Record<string, string | string[]>>({
+  const formData = useSignal<FormData>({
     priority: "2", // Default priority value (medium)
     images: [] // Initialize images array
   });
@@ -56,8 +74,8 @@ export default function NewSystemForm(
       const files = fileInput.files;
       
       if (files && files.length > 0) {
-        // Create an array to store base64 strings
-        const base64Strings: string[] = [];
+        // Create an array to store file data
+        const fileDataArray: FileData[] = [];
         
         // Process each file
         for (let i = 0; i < files.length; i++) {
@@ -66,13 +84,17 @@ export default function NewSystemForm(
           
           reader.onload = () => {
             const base64String = (reader.result as string).split(',')[1];
-            base64Strings.push(base64String);
+            fileDataArray.push({
+              base64: base64String,
+              name: file.name,
+              type: file.type
+            });
             
             // When all files are processed, update the form data
-            if (base64Strings.length === files.length) {
+            if (fileDataArray.length === files.length) {
               formData.value = { 
                 ...formData.value, 
-                [target.name]: base64Strings 
+                [target.name]: fileDataArray 
               };
             }
           };
@@ -160,17 +182,17 @@ export default function NewSystemForm(
       Object.entries(formData.value).forEach(([key, value]) => {
         if (key === "images" && Array.isArray(value)) {
           // For images, we need to format them according to Odoo's ir.attachment model
-          value.forEach((base64Data, index) => {
+          (value as FileData[]).forEach((fileData, index) => {
             // Format: name, type, datas, res_model, res_id
-            formDataObj.append(`attachment_${index}_name`, `image_${index}.jpg`);
-            formDataObj.append(`attachment_${index}_type`, 'binary');
-            formDataObj.append(`attachment_${index}_datas`, base64Data);
+            formDataObj.append(`attachment_${index}_name`, fileData.name);
+            formDataObj.append(`attachment_${index}_type`, fileData.type);
+            formDataObj.append(`attachment_${index}_datas`, fileData.base64);
             formDataObj.append(`attachment_${index}_res_model`, 'project.task');
             // We don't have the res_id yet, it will be set on the server
           });
         } else if (Array.isArray(value)) {
           // For other arrays, add each item with the same key
-          value.forEach((item, index) => {
+          (value as string[]).forEach((item, index) => {
             formDataObj.append(`${key}[${index}]`, item);
           });
         } else if (typeof value === 'string') {
@@ -224,7 +246,7 @@ export default function NewSystemForm(
           {question.type === "textarea" ? (
             <textarea
               name={question.id}
-              value={formData.value[question.id] || ""}
+              value={getStringValue(formData.value[question.id])}
               onInput={handleChange}
               required
               class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md min-h-[100px] md:min-h-[150px] lg:min-h-[200px] text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
@@ -240,7 +262,7 @@ export default function NewSystemForm(
                 : (
                   <select
                     name={question.id}
-                    value={formData.value[question.id] || ""}
+                    value={getStringValue(formData.value[question.id])}
                     onChange={handleChange}
                     class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
                   >
@@ -264,7 +286,7 @@ export default function NewSystemForm(
                 : (
                   <select
                     name={question.id}
-                    value={formData.value[question.id] || ""}
+                    value={getStringValue(formData.value[question.id])}
                     onChange={handleChange}
                     class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
                   >
@@ -280,7 +302,7 @@ export default function NewSystemForm(
             : question.type === "radio" && question.id === "priority"
             ? (
               <PriorityRadioGroup
-                value={formData.value[question.id] as string || "medium"}
+                value={getStringValue(formData.value[question.id])}
                 onChange={handleChange}
                 translations={translations}
               />
@@ -315,7 +337,7 @@ export default function NewSystemForm(
               <input
                 type={question.type}
                 name={question.id}
-                value={formData.value[question.id] || ""}
+                value={getStringValue(formData.value[question.id])}
                 onInput={handleChange}
                 required
                 class="input-field w-full p-2 md:p-3 lg:p-4 border rounded-md text-black bg-white border-gray-700 focus:border-[#8E8F1D] focus:outline-none focus:ring-1 focus:ring-[#8E8F1D] transition-all duration-300 text-sm md:text-base"
