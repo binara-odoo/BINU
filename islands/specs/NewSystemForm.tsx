@@ -2,6 +2,7 @@ import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import { IS_BROWSER } from "$fresh/runtime.ts";
 import { Translations } from "../../types/translations.ts";
+import { FileData } from "../../types/file.ts";
 import Alert from "../../components/Alert.tsx";
 import FileInput from "../../components/FileInput.tsx";
 import PriorityRadioGroup from "../../components/PriorityRadioGroup.tsx";
@@ -26,12 +27,6 @@ interface OdooUser {
 interface OdooProject {
   id: number;
   name: string;
-}
-
-interface FileData {
-  base64: string;
-  name: string;
-  type: string;
 }
 
 type FormDataValue = string | string[] | FileData[];
@@ -66,42 +61,18 @@ export default function NewSystemForm(
       | HTMLInputElement
       | HTMLTextAreaElement
       | HTMLSelectElement;
+
+    // If there's no target, it's a custom event from a component like FileInput
+    // The formData is already updated, so we can ignore it.
+    if (!target) {
+      return;
+    }
     
     if (target.type === "radio") {
       formData.value = { ...formData.value, [target.name]: target.value };
     } else if (target.type === "file") {
-      const fileInput = target as HTMLInputElement;
-      const files = fileInput.files;
-      
-      if (files && files.length > 0) {
-        // Create an array to store file data
-        const fileDataArray: FileData[] = [];
-        
-        // Process each file
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const reader = new FileReader();
-          
-          reader.onload = () => {
-            const base64String = (reader.result as string).split(',')[1];
-            fileDataArray.push({
-              base64: base64String,
-              name: file.name,
-              type: file.type
-            });
-            
-            // When all files are processed, update the form data
-            if (fileDataArray.length === files.length) {
-              formData.value = { 
-                ...formData.value, 
-                [target.name]: fileDataArray 
-              };
-            }
-          };
-          
-          reader.readAsDataURL(file);
-        }
-      }
+      // File handling is done by the FileInput component, so we do nothing here.
+      return;
     } else {
       formData.value = { ...formData.value, [target.name]: target.value };
     }
@@ -320,7 +291,6 @@ export default function NewSystemForm(
                   images_count_multiple: translations.add_feature.images_count_multiple,
                 }}
                 formData={formData}
-                onChange={handleChange}
               />
             )
             : question.type === "date"

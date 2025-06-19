@@ -1,10 +1,5 @@
 import { Signal } from "@preact/signals";
-
-interface FileData {
-  base64: string;
-  name: string;
-  type: string;
-}
+import { FileData } from "../types/file.ts";
 
 type FormDataValue = string | string[] | FileData[];
 
@@ -23,16 +18,35 @@ interface FileInputProps {
     images_count_multiple: string;
   };
   formData: Signal<FormData>;
-  onChange: (e: Event) => void;
 }
 
-export default function FileInput({ id, translations, formData, onChange }: FileInputProps) {
-  const handleButtonClick = () => {
-    // Find the hidden input and trigger its click
-    const input = document.querySelector(`input[name="${id}"]`) as HTMLInputElement;
-    if (input) {
-      input.click();
-    }
+export default function FileInput({ id, translations, formData }: FileInputProps) {
+  const handleButtonClick = (e: MouseEvent) => {
+    // Prevent the click from propagating to the label or triggering default behaviors
+    e.preventDefault();
+    e.stopPropagation();
+
+    // This function creates a temporary input element to handle file selection.
+    // This is a robust way to avoid state issues with persistent file inputs.
+    if (typeof document === 'undefined') return; // Guard for SSR
+
+    const tempInput = document.createElement('input');
+    tempInput.type = 'file';
+    tempInput.multiple = true; // Allow multiple file selection
+    tempInput.accept = '*/*';
+    tempInput.style.display = 'none';
+
+    tempInput.onchange = () => {
+      if (tempInput.files) {
+        addFiles(tempInput.files);
+      }
+      // Clean up by removing the temporary input from the DOM
+      document.body.removeChild(tempInput);
+    };
+
+    // Add the input to the body, click it, and let the onchange handler do the rest.
+    document.body.appendChild(tempInput);
+    tempInput.click();
   };
 
   const handleDragOver = (e: DragEvent) => {
@@ -49,6 +63,40 @@ export default function FileInput({ id, translations, formData, onChange }: File
     label.classList.remove('bg-[#8E8F1D]/5');
   };
 
+  const addFiles = (files: FileList | File[]) => {
+    const fileArray = Array.from(files);
+    
+    const filePromises = fileArray.map(file => {
+      return new Promise<FileData>(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = (reader.result as string).split(',')[1];
+          resolve({
+            id: crypto.randomUUID(),
+            base64: base64String,
+            name: file.name,
+            type: file.type,
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(filePromises).then(newFiles => {
+      // Updater function to ensure we have the latest state
+      const updater = (current: FormData): FormData => {
+        const currentFiles = (current[id] as FileData[]) || [];
+        return {
+          ...current,
+          [id]: [...currentFiles, ...newFiles],
+        };
+      };
+      
+      // Apply the update
+      formData.value = updater(formData.peek());
+    });
+  };
+
   const handleDrop = (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -56,67 +104,23 @@ export default function FileInput({ id, translations, formData, onChange }: File
     const label = e.currentTarget as HTMLLabelElement;
     label.classList.remove('bg-[#8E8F1D]/5');
     
-    if (!e.dataTransfer?.files) return;
-
-    // Convert dropped files to FileData and add them to existing files
-    Array.from(e.dataTransfer.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = (reader.result as string).split(',')[1];
-        // Add new file to existing files
-        const currentFiles = formData.value[id] as FileData[] || [];
-        formData.value = {
-          ...formData.value,
-          [id]: [...currentFiles, {
-            base64: base64String,
-            name: file.name,
-            type: file.type
-          }]
-        };
-        // Notify parent form of the change
-        onChange(new Event('change'));
-      };
-      reader.readAsDataURL(file);
-    });
+    if (e.dataTransfer?.files) {
+      addFiles(e.dataTransfer.files);
+    }
   };
 
-  const processFiles = (files: FileList) => {
-    Array.from(files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = (reader.result as string).split(',')[1];
-        // Add new file to existing files
-        const currentFiles = formData.value[id] as FileData[] || [];
-        formData.value = {
-          ...formData.value,
-          [id]: [...currentFiles, {
-            base64: base64String,
-            name: file.name,
-            type: file.type
-          }]
-        };
-        // Notify parent form of the change
-        onChange(new Event('change'));
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleDelete = (index: number) => {
-    const currentFiles = formData.value[id] as FileData[];
+  const handleDelete = (fileId: string) => {
+    // Important: We now delete by a stable, unique ID, not by index.
+    const currentFormData = formData.value;
+    const currentFiles = (currentFormData[id] as FileData[]) || [];
     if (!currentFiles) return;
 
-    // Remove the file at the specified index
-    const newFiles = [...currentFiles];
-    newFiles.splice(index, 1);
+    const newFiles = currentFiles.filter(file => file.id !== fileId);
     
-    // Update formData with the new array
     formData.value = {
-      ...formData.value,
-      [id]: newFiles.length > 0 ? newFiles : []
+      ...currentFormData,
+      [id]: newFiles
     };
-    // Notify parent form of the change
-    onChange(new Event('change'));
   };
 
   const getFileIcon = (fileType: string, fileName: string = '') => {
@@ -242,9 +246,9 @@ export default function FileInput({ id, translations, formData, onChange }: File
           ) : (
             <div class="flex flex-col items-center justify-center p-4 w-full">
               <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4 w-full">
-                {files.map((fileData, index) => (
+                {files.map((fileData) => (
                   <div 
-                    key={index} 
+                    key={fileData.id} 
                     class="relative group/item aspect-square bg-[#8E8F1D]/5 rounded-lg overflow-hidden"
                   >
                     <div class="w-full h-full flex flex-col items-center justify-center p-4">
@@ -257,7 +261,8 @@ export default function FileInput({ id, translations, formData, onChange }: File
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
-                        handleDelete(index);
+                        e.stopPropagation(); // Be extra safe
+                        handleDelete(fileData.id); // Pass the stable ID
                       }}
                       class="absolute top-1 right-1 p-1 rounded-full bg-red-500 text-white opacity-0 group-hover/item:opacity-100 transition-opacity duration-200 hover:bg-red-600"
                     >
@@ -267,32 +272,18 @@ export default function FileInput({ id, translations, formData, onChange }: File
                     </button>
                   </div>
                 ))}
-                <div 
+                <button 
+                  type="button"
                   class="aspect-square bg-[#8E8F1D]/5 rounded-lg flex items-center justify-center cursor-pointer hover:bg-[#8E8F1D]/10 transition-all duration-300"
                   onClick={handleButtonClick}
                 >
                   <svg class="w-6 h-6 text-[#8E8F1D]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                   </svg>
-                </div>
+                </button>
               </div>
             </div>
           )}
-          <input
-            type="file"
-            name={id}
-            onChange={(e) => {
-              const input = e.target as HTMLInputElement;
-              if (input.files && input.files.length > 0) {
-                processFiles(input.files);
-                // Clear input value to allow selecting the same file again
-                input.value = '';
-              }
-            }}
-            multiple
-            class="hidden"
-            accept="*/*"
-          />
         </label>
       </div>
       <div class="mt-2 text-sm text-[#8E8F1D]">
