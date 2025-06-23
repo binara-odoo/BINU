@@ -17,6 +17,7 @@ import * as $dashboard_dashboard2 from "./routes/dashboard/dashboard2.tsx";
 import * as $error from "./routes/error.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $projects_projects_index from "./routes/projects/projects-index.tsx";
 import * as $specs_add_feature from "./routes/specs/add-feature.tsx";
 import * as $specs_fix from "./routes/specs/fix.tsx";
 import * as $specs_new_system from "./routes/specs/new-system.tsx";
@@ -57,6 +58,7 @@ const manifest = {
     "./routes/error.tsx": $error,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
+    "./routes/projects/projects-index.tsx": $projects_projects_index,
     "./routes/specs/add-feature.tsx": $specs_add_feature,
     "./routes/specs/fix.tsx": $specs_fix,
     "./routes/specs/new-system.tsx": $specs_new_system,

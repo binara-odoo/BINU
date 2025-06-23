@@ -94,12 +94,12 @@ export default function Dashboard({ data }: PageProps<DashboardProps>) {
     {
       title: data.Translations.dashboard.projects,
       icon: "/dashboardIcons/projects.gif",
-      href: "#",
+      href: `/projects/projects-index?lang=${data.lang}`,
     },
     {
       title: data.Translations.dashboard.evaluations,
       icon: "/dashboardIcons/evaluations.gif",
-      href: "#",
+      href: `/projects/projects-index?lang=${data.lang}`,
     },
     {
       title: data.Translations.dashboard.specs,

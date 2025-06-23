@@ -241,51 +241,7 @@ ${data.budget}<br><br>
 What are the features of this system?<br><br>
 ${data.features}`;
 
-        // Create task in the newly created project
-        const odooData = {
-            jsonrpc: "2.0",
-            method: "call",
-            params: {
-                service: "object",
-                method: "execute_kw",
-                args: [
-                    ODOO_API_DATABASE,
-                    uid,
-                    ODOO_API_KEY,
-                    "project.task",
-                    "create",
-                    [{
-                        name: data.name,
-                        project_id: parseInt(data.projectId),
-                        description: description,
-                        x_studio_related_systems: data.relatedSystems,
-                        x_studio_purpose: data.purpose,
-                        x_studio_users: data.users,
-                        x_studio_priority: data.priority,
-                        x_studio_features: data.features,
-                        priority: priorityValue,
-                        x_studio_images: data.images ? data.images.map(img => img.datas).join(',') : false,
-                    }],
-                ],
-            },
-            id: 5,
-        };
-
-        const response = await fetch(ODOO_API_URL!, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(odooData),
-        });
-
-        const result = await response.json();
-        
-        if (result.error) {
-            throw new Error(result.error.data?.message || "Error creating task in original project");
-        }
-
-        const taskId = result.result;
-
-        // Create the same task in the Tickets DevOps project
+        // Create task only in the Tickets DevOps project
         const ticketsDevOpsData = {
             jsonrpc: "2.0",
             method: "call",
@@ -324,53 +280,13 @@ ${data.features}`;
         const ticketsDevOpsResult = await ticketsDevOpsResponse.json();
         
         if (ticketsDevOpsResult.error) {
-            console.error("Error creating task in Tickets DevOps project:", ticketsDevOpsResult.error);
+            throw new Error(ticketsDevOpsResult.error.data?.message || "Error creating task in Tickets DevOps project");
         }
 
         const ticketsDevOpsTaskId = ticketsDevOpsResult.result;
 
-        // If we have attachments, create them for both tasks
+        // If we have attachments, create them for the task
         if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-            // Create attachments for the original task
-            for (const attachment of data.images) {
-                const attachmentData = {
-                    jsonrpc: "2.0",
-                    method: "call",
-                    params: {
-                        service: "object",
-                        method: "execute_kw",
-                        args: [
-                            ODOO_API_DATABASE,
-                            uid,
-                            ODOO_API_KEY,
-                            "ir.attachment",
-                            "create",
-                            [{
-                                name: attachment.name,
-                                type: "binary",
-                                datas: attachment.datas,
-                                res_model: "project.task",
-                                res_id: taskId,
-                                mimetype: attachment.type,
-                            }],
-                        ],
-                    },
-                    id: 7,
-                };
-
-                const attachmentResponse = await fetch(ODOO_API_URL!, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(attachmentData),
-                });
-
-                const attachmentResult = await attachmentResponse.json();
-                
-                if (attachmentResult.error) {
-                    console.error("Error creating attachment for original task:", attachmentResult.error);
-                }
-            }
-
             // Create attachments for the Tickets DevOps task
             for (const attachment of data.images) {
                 const attachmentData = {
@@ -413,8 +329,7 @@ ${data.features}`;
         }
 
         return {
-            originalTaskId: taskId,
-            ticketsDevOpsTaskId: ticketsDevOpsTaskId
+            taskId: ticketsDevOpsTaskId
         };
     } catch (error) {
         console.error("Error in createTask:", error);
@@ -579,51 +494,7 @@ ${data.current}<br><br>
 What are the steps to reproduce the issue?<br><br>
 ${data.steps}`;
 
-        // Create task in the newly created project
-        const odooData = {
-            jsonrpc: "2.0",
-            method: "call",
-            params: {
-                service: "object",
-                method: "execute_kw",
-                args: [
-                    ODOO_API_DATABASE,
-                    uid,
-                    ODOO_API_KEY,
-                    "project.task",
-                    "create",
-                    [{
-                        name: customTaskName,
-                        project_id: parseInt(data.projectId),
-                        description: description,
-                        x_studio_fix_feature: data.feature,
-                        x_studio_fix_expected: data.expected,
-                        x_studio_fix_current: data.current,
-                        x_studio_fix_steps: data.steps,
-                        x_studio_fix_priority: data.priority,
-                        priority: priorityValue,
-                        x_studio_images: data.images ? data.images.map(img => img.datas).join(',') : false,
-                    }],
-                ],
-            },
-            id: 5,
-        };
-
-        const response = await fetch(ODOO_API_URL!, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(odooData),
-        });
-
-        const result = await response.json();
-        
-        if (result.error) {
-            throw new Error(result.error.data?.message || "Error creating task");
-        }
-
-        const taskId = result.result;
-
-        // Create the same task in the Tickets DevOps project
+        // Create task only in the Tickets DevOps project
         const ticketsDevOpsData = {
             jsonrpc: "2.0",
             method: "call",
@@ -662,53 +533,13 @@ ${data.steps}`;
         const ticketsDevOpsResult = await ticketsDevOpsResponse.json();
         
         if (ticketsDevOpsResult.error) {
-            console.error("Error creating task in Tickets DevOps project:", ticketsDevOpsResult.error);
+            throw new Error(ticketsDevOpsResult.error.data?.message || "Error creating task in Tickets DevOps project");
         }
 
         const ticketsDevOpsTaskId = ticketsDevOpsResult.result;
 
-        // If we have attachments, create them for both tasks
+        // If we have attachments, create them for the task
         if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-            // Create attachments for the original task
-            for (const attachment of data.images) {
-                const attachmentData = {
-                    jsonrpc: "2.0",
-                    method: "call",
-                    params: {
-                        service: "object",
-                        method: "execute_kw",
-                        args: [
-                            ODOO_API_DATABASE,
-                            uid,
-                            ODOO_API_KEY,
-                            "ir.attachment",
-                            "create",
-                            [{
-                                name: attachment.name,
-                                type: "binary",
-                                datas: attachment.datas,
-                                res_model: "project.task",
-                                res_id: taskId,
-                                mimetype: attachment.type,
-                            }],
-                        ],
-                    },
-                    id: 7,
-                };
-
-                const attachmentResponse = await fetch(ODOO_API_URL!, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(attachmentData),
-                });
-
-                const attachmentResult = await attachmentResponse.json();
-                
-                if (attachmentResult.error) {
-                    console.error("Error creating attachment for original task:", attachmentResult.error);
-                }
-            }
-
             // Create attachments for the Tickets DevOps task
             for (const attachment of data.images) {
                 const attachmentData = {
@@ -751,8 +582,7 @@ ${data.steps}`;
         }
 
         return {
-            originalTaskId: taskId,
-            ticketsDevOpsTaskId: ticketsDevOpsTaskId,
+            taskId: ticketsDevOpsTaskId,
             customTaskName: customTaskName
         };
     } catch (error) {
@@ -1013,8 +843,7 @@ export const handler: Handlers = {
                 const taskIds = await createTask({ projectId, name, purpose, relatedSystems, users, priority, budget, features, images });
                 return new Response(JSON.stringify({ 
                     success: true, 
-                    taskId: taskIds.originalTaskId,
-                    ticketsDevOpsTaskId: taskIds.ticketsDevOpsTaskId
+                    taskId: taskIds.taskId
                 }), {
                     status: 201,
                     headers: { "Content-Type": "application/json" },
@@ -1067,8 +896,7 @@ export const handler: Handlers = {
                 });
                 return new Response(JSON.stringify({ 
                     success: true, 
-                    taskId: taskIds.originalTaskId,
-                    ticketsDevOpsTaskId: taskIds.ticketsDevOpsTaskId,
+                    taskId: taskIds.taskId,
                     customTaskName: taskIds.customTaskName
                 }), {
                     status: 201,
@@ -1122,8 +950,7 @@ export const handler: Handlers = {
                 });
                 return new Response(JSON.stringify({ 
                     success: true, 
-                    taskId: taskIds.originalTaskId,
-                    ticketsDevOpsTaskId: taskIds.ticketsDevOpsTaskId,
+                    taskId: taskIds.taskId,
                     customTaskName: taskIds.customTaskName
                 }), {
                     status: 201,
@@ -1249,52 +1076,7 @@ ${data.current}<br><br>
 What are the implementation requirements?<br><br>
 ${data.steps}`;
 
-        // Create task in the newly created project
-        const odooData = {
-            jsonrpc: "2.0",
-            method: "call",
-            params: {
-                service: "object",
-                method: "execute_kw",
-                args: [
-                    ODOO_API_DATABASE,
-                    uid,
-                    ODOO_API_KEY,
-                    "project.task",
-                    "create",
-                    [{
-                        name: customTaskName,
-                        project_id: parseInt(data.projectId),
-                        description: description,
-                        x_studio_add_feature: data.feature,
-                        x_studio_add_why: data.expected,
-                        x_studio_add_users: data.current,
-                        x_studio_add_requirements: data.steps,
-                        x_studio_add_priority: data.priority,
-                        x_studio_integration: "Yes",
-                        priority: priorityValue,
-                        x_studio_images: data.images ? data.images.map(img => img.datas).join(',') : false,
-                    }],
-                ],
-            },
-            id: 5,
-        };
-
-        const response = await fetch(ODOO_API_URL!, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(odooData),
-        });
-
-        const result = await response.json();
-        
-        if (result.error) {
-            throw new Error(result.error.data?.message || "Error creating task");
-        }
-
-        const taskId = result.result;
-
-        // Create the same task in the Tickets DevOps project
+        // Create task only in the Tickets DevOps project
         const ticketsDevOpsData = {
             jsonrpc: "2.0",
             method: "call",
@@ -1334,53 +1116,13 @@ ${data.steps}`;
         const ticketsDevOpsResult = await ticketsDevOpsResponse.json();
         
         if (ticketsDevOpsResult.error) {
-            console.error("Error creating task in Tickets DevOps project:", ticketsDevOpsResult.error);
+            throw new Error(ticketsDevOpsResult.error.data?.message || "Error creating task in Tickets DevOps project");
         }
 
         const ticketsDevOpsTaskId = ticketsDevOpsResult.result;
 
-        // If we have attachments, create them for both tasks
+        // If we have attachments, create them for the task
         if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-            // Create attachments for the original task
-            for (const attachment of data.images) {
-                const attachmentData = {
-                    jsonrpc: "2.0",
-                    method: "call",
-                    params: {
-                        service: "object",
-                        method: "execute_kw",
-                        args: [
-                            ODOO_API_DATABASE,
-                            uid,
-                            ODOO_API_KEY,
-                            "ir.attachment",
-                            "create",
-                            [{
-                                name: attachment.name,
-                                type: "binary",
-                                datas: attachment.datas,
-                                res_model: "project.task",
-                                res_id: taskId,
-                                mimetype: attachment.type,
-                            }],
-                        ],
-                    },
-                    id: 7,
-                };
-
-                const attachmentResponse = await fetch(ODOO_API_URL!, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(attachmentData),
-                });
-
-                const attachmentResult = await attachmentResponse.json();
-                
-                if (attachmentResult.error) {
-                    console.error("Error creating attachment for original task:", attachmentResult.error);
-                }
-            }
-
             // Create attachments for the Tickets DevOps task
             for (const attachment of data.images) {
                 const attachmentData = {
@@ -1423,8 +1165,7 @@ ${data.steps}`;
         }
 
         return {
-            originalTaskId: taskId,
-            ticketsDevOpsTaskId: ticketsDevOpsTaskId,
+            taskId: ticketsDevOpsTaskId,
             customTaskName: customTaskName
         };
     } catch (error) {
